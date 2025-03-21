@@ -1,0 +1,452 @@
+{% extends "base.html" %}
+
+{% block title %}Debug Console - YouTube Shorts Machine{% endblock %}
+
+{% block content %}
+<div class="debug-console">
+    <div class="debug-header">
+        <h1><i class="fas fa-bug"></i> Debug Console</h1>
+        <p class="debug-subtitle">Detailed information to help diagnose issues</p>
+    </div>
+    
+    <div class="debug-panels">
+        <!-- System Information -->
+        <div class="debug-panel">
+            <div class="panel-header">
+                <h2><i class="fas fa-server"></i> System Information</h2>
+            </div>
+            <div class="panel-content">
+                <div class="info-group">
+                    <div class="info-item">
+                        <div class="info-label">Environment:</div>
+                        <div class="info-value">{{ environ.get('ENVIRONMENT', 'development') }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Debug Mode:</div>
+                        <div class="info-value">{{ 'Enabled' if dev_mode else 'Disabled' }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">API Available:</div>
+                        <div class="info-value {{ 'text-success' if api_available else 'text-danger' }}">
+                            {{ 'Yes' if api_available else 'No' }}
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Python Version:</div>
+                        <div class="info-value">{{ python_version }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Running Since:</div>
+                        <div class="info-value">{{ startup_time }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- API Endpoints -->
+        <div class="debug-panel">
+            <div class="panel-header">
+                <h2><i class="fas fa-link"></i> API Endpoints</h2>
+            </div>
+            <div class="panel-content">
+                {% if api_available %}
+                    <div class="endpoints-list">
+                        {% for endpoint in api_endpoints %}
+                            <div class="endpoint-item">
+                                <span class="http-method {{ endpoint.method | lower }}">{{ endpoint.method }}</span>
+                                <span class="endpoint-path">{{ endpoint.path }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="api-unavailable">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>API is not available. Please start the API server.</p>
+                        <pre class="command-example">python -m uvicorn src.app.api.main:app --host 0.0.0.0 --port 8002 --reload</pre>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Environment Variables -->
+        <div class="debug-panel">
+            <div class="panel-header">
+                <h2><i class="fas fa-cog"></i> Environment Variables</h2>
+            </div>
+            <div class="panel-content">
+                <div class="env-vars-list">
+                    {% for key, value in environ.items() %}
+                        {% if key not in ['PASSWORD', 'SECRET', 'KEY', 'TOKEN'] and not 'PASSWORD' in key and not 'SECRET' in key and not 'TOKEN' in key %}
+                            <div class="env-var-item">
+                                <div class="env-var-name">{{ key }}</div>
+                                <div class="env-var-value">{{ value }}</div>
+                            </div>
+                        {% else %}
+                            <div class="env-var-item">
+                                <div class="env-var-name">{{ key }}</div>
+                                <div class="env-var-value">******** (hidden)</div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Request Information -->
+        <div class="debug-panel">
+            <div class="panel-header">
+                <h2><i class="fas fa-exchange-alt"></i> Request Information</h2>
+            </div>
+            <div class="panel-content">
+                <div class="info-group">
+                    <div class="info-item">
+                        <div class="info-label">URL:</div>
+                        <div class="info-value">{{ request.url }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Method:</div>
+                        <div class="info-value">{{ request.method }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Client Host:</div>
+                        <div class="info-value">{{ request.client.host }}</div>
+                    </div>
+                </div>
+                
+                <h3>Headers</h3>
+                <div class="headers-list">
+                    {% for key, value in request.headers.items() %}
+                        <div class="header-item">
+                            <div class="header-name">{{ key }}</div>
+                            <div class="header-value">{{ value }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Memory Usage -->
+        <div class="debug-panel">
+            <div class="panel-header">
+                <h2><i class="fas fa-memory"></i> Memory Usage</h2>
+            </div>
+            <div class="panel-content">
+                <div class="memory-chart">
+                    <div class="memory-bar-container">
+                        <div class="memory-bar" style="width: {{ memory_usage.percent }}%"></div>
+                    </div>
+                    <div class="memory-details">
+                        <span>Used: {{ memory_usage.used_mb }} MB</span>
+                        <span>Total: {{ memory_usage.total_mb }} MB</span>
+                        <span>{{ memory_usage.percent }}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Debug Actions -->
+        <div class="debug-panel">
+            <div class="panel-header">
+                <h2><i class="fas fa-tools"></i> Debug Actions</h2>
+            </div>
+            <div class="panel-content debug-actions">
+                <a href="/api-status-check" class="debug-action-btn">
+                    <i class="fas fa-heartbeat"></i>
+                    API Status Check
+                </a>
+                <a href="/debug/test-websocket" class="debug-action-btn">
+                    <i class="fas fa-plug"></i>
+                    Test WebSocket
+                </a>
+                <a href="/debug/logs" class="debug-action-btn">
+                    <i class="fas fa-file-alt"></i>
+                    View Logs
+                </a>
+                <a href="/debug/clear-cache" class="debug-action-btn">
+                    <i class="fas fa-trash"></i>
+                    Clear Cache
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .debug-console {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--spacing-md);
+    }
+    
+    .debug-header {
+        text-align: center;
+        margin-bottom: var(--spacing-xl);
+    }
+    
+    .debug-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: var(--spacing-xs);
+        color: var(--warning-color);
+    }
+    
+    .debug-subtitle {
+        color: var(--text-light);
+        font-size: 1.2rem;
+    }
+    
+    .debug-panels {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: var(--spacing-lg);
+    }
+    
+    .debug-panel {
+        background-color: var(--card-bg);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+    }
+    
+    .panel-header {
+        background-color: var(--background-color);
+        padding: var(--spacing-md);
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .panel-header h2 {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+    
+    .panel-content {
+        padding: var(--spacing-md);
+    }
+    
+    /* Info groups */
+    .info-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .info-item {
+        display: flex;
+        flex-wrap: wrap;
+        padding: var(--spacing-sm);
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        width: 140px;
+        flex-shrink: 0;
+    }
+    
+    .info-value {
+        flex: 1;
+    }
+    
+    .text-success {
+        color: var(--success-color);
+    }
+    
+    .text-danger {
+        color: var(--danger-color);
+    }
+    
+    /* API Endpoints */
+    .endpoints-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .endpoint-item {
+        padding: var(--spacing-sm);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+    
+    .http-method {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .http-method.get {
+        background-color: #61affe;
+        color: white;
+    }
+    
+    .http-method.post {
+        background-color: #49cc90;
+        color: white;
+    }
+    
+    .http-method.put {
+        background-color: #fca130;
+        color: white;
+    }
+    
+    .http-method.delete {
+        background-color: #f93e3e;
+        color: white;
+    }
+    
+    /* API unavailable */
+    .api-unavailable {
+        text-align: center;
+        padding: var(--spacing-lg);
+        color: var(--text-light);
+    }
+    
+    .api-unavailable i {
+        font-size: 2rem;
+        color: var(--warning-color);
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .command-example {
+        background-color: var(--background-color);
+        padding: var(--spacing-sm);
+        border-radius: var(--radius-sm);
+        margin-top: var(--spacing-md);
+        font-family: monospace;
+        font-size: 0.9rem;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    /* Environment variables */
+    .env-vars-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .env-var-item {
+        padding: var(--spacing-sm);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--spacing-xs);
+    }
+    
+    .env-var-name {
+        font-weight: 600;
+        margin-right: var(--spacing-sm);
+        color: var(--text-color);
+    }
+    
+    .env-var-value {
+        color: var(--text-light);
+        font-family: monospace;
+        word-break: break-word;
+    }
+    
+    /* Headers */
+    .headers-list {
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: var(--spacing-sm);
+    }
+    
+    .header-item {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--spacing-xs);
+    }
+    
+    .header-name {
+        font-weight: 600;
+        color: var(--text-color);
+    }
+    
+    .header-value {
+        font-family: monospace;
+        color: var(--text-light);
+        word-break: break-word;
+    }
+    
+    /* Memory chart */
+    .memory-chart {
+        margin-top: var(--spacing-md);
+    }
+    
+    .memory-bar-container {
+        height: 24px;
+        background-color: var(--background-color);
+        border-radius: var(--radius-pill);
+        overflow: hidden;
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .memory-bar {
+        height: 100%;
+        background: linear-gradient(to right, var(--success-color), var(--warning-color), var(--danger-color));
+        border-radius: var(--radius-pill);
+    }
+    
+    .memory-details {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: var(--text-light);
+    }
+    
+    /* Debug actions */
+    .debug-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: var(--spacing-md);
+    }
+    
+    .debug-action-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: var(--spacing-md);
+        background-color: var(--background-color);
+        border-radius: var(--radius-md);
+        text-align: center;
+        color: var(--text-color);
+        transition: all var(--transition-normal);
+        height: 100%;
+    }
+    
+    .debug-action-btn i {
+        font-size: 1.5rem;
+        margin-bottom: var(--spacing-sm);
+        color: var(--primary-color);
+    }
+    
+    .debug-action-btn:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+        color: var(--primary-color);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+        .debug-panels {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %} 

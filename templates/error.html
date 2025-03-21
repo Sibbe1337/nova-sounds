@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}Error {{ error_code }} - YouTube Shorts Machine{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-header">
+        <h1 class="error-code">{{ error_code }}</h1>
+        <h2 class="error-title">{{ error_message }}</h2>
+    </div>
+    
+    <div class="error-illustration">
+        {% if error_code == 404 %}
+            <i class="fas fa-map-signs"></i>
+        {% elif error_code == 500 %}
+            <i class="fas fa-exclamation-triangle"></i>
+        {% else %}
+            <i class="fas fa-bug"></i>
+        {% endif %}
+    </div>
+    
+    {% if dev_mode %}
+        <div class="error-debug-info">
+            <div class="debug-badge">Development Mode</div>
+            
+            {% if error_type %}
+                <div class="debug-section">
+                    <h3>Error Type</h3>
+                    <div class="debug-content">{{ error_type }}</div>
+                </div>
+            {% endif %}
+            
+            {% if error_details %}
+                <div class="debug-section">
+                    <h3>Error Details</h3>
+                    <div class="debug-content">{{ error_details }}</div>
+                </div>
+            {% endif %}
+            
+            {% if traceback %}
+                <div class="debug-section">
+                    <h3>Traceback</h3>
+                    <div class="debug-traceback">
+                        <pre>{{ traceback }}</pre>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+    
+    <div class="error-actions">
+        <a href="/" class="btn primary">
+            <i class="fas fa-home"></i> Return to Home
+        </a>
+        
+        {% if error_code == 404 %}
+            <a href="javascript:history.back()" class="btn secondary">
+                <i class="fas fa-arrow-left"></i> Go Back
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .error-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: var(--spacing-xl);
+        text-align: center;
+    }
+    
+    .error-header {
+        margin-bottom: var(--spacing-xl);
+    }
+    
+    .error-code {
+        font-size: 6rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin: 0;
+        line-height: 1;
+    }
+    
+    .error-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-top: var(--spacing-md);
+        color: var(--text-color);
+    }
+    
+    .error-illustration {
+        font-size: 8rem;
+        color: var(--text-light);
+        opacity: 0.3;
+        margin: var(--spacing-xl) 0;
+    }
+    
+    .error-actions {
+        margin-top: var(--spacing-xl);
+        display: flex;
+        justify-content: center;
+        gap: var(--spacing-md);
+    }
+    
+    /* Debug info styles */
+    .error-debug-info {
+        background-color: var(--card-bg);
+        border-radius: var(--radius-md);
+        padding: var(--spacing-lg);
+        margin: var(--spacing-xl) 0;
+        text-align: left;
+        border: 1px solid var(--border-color);
+        position: relative;
+    }
+    
+    .debug-badge {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--warning-color);
+        color: var(--white);
+        padding: 4px 12px;
+        border-radius: var(--radius-pill);
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .debug-section {
+        margin-bottom: var(--spacing-md);
+        padding-bottom: var(--spacing-md);
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .debug-section:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+    
+    .debug-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: var(--spacing-sm);
+        color: var(--text-color);
+    }
+    
+    .debug-content {
+        font-family: monospace;
+        font-size: 0.9rem;
+        padding: var(--spacing-sm);
+        background-color: var(--background-color);
+        border-radius: var(--radius-sm);
+        color: var(--text-color);
+        word-break: break-word;
+    }
+    
+    .debug-traceback {
+        max-height: 400px;
+        overflow-y: auto;
+        background-color: var(--background-color);
+        border-radius: var(--radius-sm);
+    }
+    
+    .debug-traceback pre {
+        margin: 0;
+        padding: var(--spacing-md);
+        font-family: monospace;
+        font-size: 0.85rem;
+        white-space: pre-wrap;
+        line-height: 1.5;
+        color: var(--text-color);
+    }
+    
+    @media (max-width: 768px) {
+        .error-code {
+            font-size: 4rem;
+        }
+        
+        .error-title {
+            font-size: 1.5rem;
+        }
+        
+        .error-illustration {
+            font-size: 6rem;
+        }
+        
+        .error-debug-info {
+            padding: var(--spacing-md);
+        }
+        
+        .debug-traceback {
+            max-height: 300px;
+        }
+    }
+</style>
+{% endblock %} 

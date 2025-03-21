@@ -1,0 +1,151 @@
+/* 
+ * CSS Variables
+ * Global CSS variables for theming and consistent styling
+ */
+
+:root {
+    /* Base colors */
+    --primary-color: #0071e3;
+    --primary-color-rgb: 0, 113, 227;
+    --accent-color: #0071e3;
+    --accent-color-rgb: 0, 113, 227;
+    
+    /* Light theme colors (default) */
+    --background-color: #f5f5f7;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --text-color-rgb: 51, 51, 51;
+    --text-color-light: #86868b;
+    --border-color: #d2d2d7;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    
+    /* Functional colors */
+    --success-color: #28a745;
+    --success-color-rgb: 40, 167, 69;
+    --error-color: #dc3545;
+    --error-color-rgb: 220, 53, 69;
+    --warning-color: #ffc107;
+    --warning-color-rgb: 255, 193, 7;
+    --info-color: #17a2b8;
+    --info-color-rgb: 23, 162, 184;
+    
+    /* Font family */
+    --font-primary: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    
+    /* Font sizes */
+    --font-size-xs: 0.75rem;    /* 12px */
+    --font-size-sm: 0.875rem;   /* 14px */
+    --font-size-base: 1rem;     /* 16px */
+    --font-size-md: 1.125rem;   /* 18px */
+    --font-size-lg: 1.25rem;    /* 20px */
+    --font-size-xl: 1.5rem;     /* 24px */
+    --font-size-2xl: 1.875rem;  /* 30px */
+    --font-size-3xl: 2.25rem;   /* 36px */
+    
+    /* Line heights */
+    --line-height-tight: 1.25;
+    --line-height-base: 1.5;
+    --line-height-loose: 1.75;
+    
+    /* Font weights */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    
+    /* Border radius */
+    --radius-sm: 0.25rem;     /* 4px */
+    --radius-md: 0.5rem;      /* 8px */
+    --radius-lg: 0.75rem;     /* 12px */
+    --radius-xl: 1rem;        /* 16px */
+    --radius-full: 9999px;    /* Circle */
+    
+    /* Spacing */
+    --space-1: 0.25rem;       /* 4px */
+    --space-2: 0.5rem;        /* 8px */
+    --space-3: 0.75rem;       /* 12px */
+    --space-4: 1rem;          /* 16px */
+    --space-5: 1.5rem;        /* 24px */
+    --space-6: 2rem;          /* 32px */
+    --space-7: 2.5rem;        /* 40px */
+    --space-8: 3rem;          /* 48px */
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    
+    /* Transitions */
+    --transition-fast: 0.1s;
+    --transition-base: 0.2s;
+    --transition-slow: 0.3s;
+    --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Z-index layers */
+    --z-index-dropdown: 1000;
+    --z-index-sticky: 1020;
+    --z-index-fixed: 1030;
+    --z-index-modal-backdrop: 1040;
+    --z-index-modal: 1050;
+    --z-index-popover: 1060;
+    --z-index-tooltip: 1070;
+}
+
+/* Dark theme colors */
+.dark-theme {
+    --background-color: #1c1c1e;
+    --card-bg: #2c2c2e;
+    --text-color: #f5f5f7;
+    --text-color-rgb: 245, 245, 247;
+    --text-color-light: #98989d;
+    --border-color: #3a3a3c;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    
+    /* Adjusted functional colors for dark mode */
+    --success-color: #2dd36f;
+    --success-color-rgb: 45, 211, 111;
+    --error-color: #ff453a;
+    --error-color-rgb: 255, 69, 58;
+    --warning-color: #ffd60a;
+    --warning-color-rgb: 255, 214, 10;
+    --info-color: #64d2ff;
+    --info-color-rgb: 100, 210, 255;
+    
+    /* Adjusted shadows for dark mode */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* High contrast theme colors */
+.high-contrast {
+    --primary-color: #0050ff;
+    --primary-color-rgb: 0, 80, 255;
+    --success-color: #00a000;
+    --success-color-rgb: 0, 160, 0;
+    --error-color: #ff0000;
+    --error-color-rgb: 255, 0, 0;
+    --warning-color: #ffa700;
+    --warning-color-rgb: 255, 167, 0;
+    --info-color: #0088ff;
+    --info-color-rgb: 0, 136, 255;
+    
+    /* High contrast light theme */
+    --background-color: #ffffff;
+    --card-bg: #f8f8f8;
+    --text-color: #000000;
+    --text-color-rgb: 0, 0, 0;
+    --text-color-light: #444444;
+    --border-color: #000000;
+}
+
+/* High contrast dark theme */
+.dark-theme.high-contrast {
+    --background-color: #000000;
+    --card-bg: #121212;
+    --text-color: #ffffff;
+    --text-color-rgb: 255, 255, 255;
+    --text-color-light: #cccccc;
+    --border-color: #ffffff;
+} 

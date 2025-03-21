@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}Video Analytics - YouTube Shorts Machine{% endblock %}
+
+{% block content %}
+<section class="analytics-container">
+    <div class="analytics-header">
+        <h2>Video Analytics</h2>
+        <p>Performance data for your video</p>
+        
+        {% if dev_mode %}
+        <div class="debug-mode-indicator">
+            <p><strong>Debug Mode Enabled:</strong> Using mock analytics data.</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="video-preview">
+        <div class="video-thumbnail-large">
+            <img src="{{ video.thumbnail_url }}" alt="{{ video.title }}">
+        </div>
+        <div class="video-info">
+            <h3>{{ video.title }}</h3>
+            <p class="video-description">{{ video.description }}</p>
+            <div class="video-meta">
+                <span class="meta-item"><i class="fas fa-calendar"></i> {{ video.upload_date }}</span>
+                <span class="meta-item"><i class="fas fa-eye"></i> {{ video.view_count }} views</span>
+                <span class="meta-item"><i class="fas fa-thumbs-up"></i> {{ video.like_count }} likes</span>
+                <span class="meta-item"><i class="fas fa-comment"></i> {{ video.comment_count }} comments</span>
+            </div>
+            <div class="video-actions">
+                <a href="https://www.youtube.com/watch?v={{ video.youtube_id }}" target="_blank" class="btn primary">
+                    <i class="fas fa-play"></i> Watch on YouTube
+                </a>
+                {% if video.upload_status == 'completed' %}
+                <a href="/youtube/videos/{{ video.youtube_id }}/edit" class="btn secondary">
+                    <i class="fas fa-edit"></i> Edit Metadata
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="analytics-dashboard">
+        <div class="analytics-section">
+            <h3>Performance Overview</h3>
+            <div class="analytics-cards">
+                <div class="analytics-card">
+                    <div class="analytics-value">{{ video.view_count }}</div>
+                    <div class="analytics-label">Total Views</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="analytics-value">{{ video.like_count }}</div>
+                    <div class="analytics-label">Total Likes</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="analytics-value">{{ video.comment_count }}</div>
+                    <div class="analytics-label">Total Comments</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="analytics-value">{{ engagement_rate }}%</div>
+                    <div class="analytics-label">Engagement Rate</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="analytics-section">
+            <h3>Traffic Sources</h3>
+            <div class="chart-container">
+                {% if traffic_sources %}
+                <div class="traffic-sources-chart">
+                    <canvas id="trafficSourcesChart"></canvas>
+                </div>
+                {% else %}
+                <div class="no-data-message">
+                    <p>No traffic source data available for this video.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="analytics-section">
+            <h3>Audience Demographics</h3>
+            <div class="chart-container">
+                {% if demographics %}
+                <div class="demographics-chart">
+                    <canvas id="demographicsChart"></canvas>
+                </div>
+                {% else %}
+                <div class="no-data-message">
+                    <p>No demographic data available for this video.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="analytics-section">
+            <h3>Viewer Retention</h3>
+            <div class="chart-container">
+                {% if retention_data %}
+                <div class="retention-chart">
+                    <canvas id="retentionChart"></canvas>
+                </div>
+                {% else %}
+                <div class="no-data-message">
+                    <p>No retention data available for this video.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if traffic_sources or demographics or retention_data %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if traffic_sources %}
+        // Traffic Sources Chart
+        const trafficSourcesCtx = document.getElementById('trafficSourcesChart').getContext('2d');
+        const trafficSourcesChart = new Chart(trafficSourcesCtx, {
+            type: 'pie',
+            data: {
+                labels: {{ traffic_sources.labels|safe }},
+                datasets: [{
+                    data: {{ traffic_sources.data|safe }},
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+        {% endif %}
+        
+        {% if demographics %}
+        // Demographics Chart
+        const demographicsCtx = document.getElementById('demographicsChart').getContext('2d');
+        const demographicsChart = new Chart(demographicsCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ demographics.labels|safe }},
+                datasets: [{
+                    label: 'Age Groups',
+                    data: {{ demographics.data|safe }},
+                    backgroundColor: '#36A2EB'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        {% endif %}
+        
+        {% if retention_data %}
+        // Retention Chart
+        const retentionCtx = document.getElementById('retentionChart').getContext('2d');
+        const retentionChart = new Chart(retentionCtx, {
+            type: 'line',
+            data: {
+                labels: {{ retention_data.labels|safe }},
+                datasets: [{
+                    label: 'Audience Retention',
+                    data: {{ retention_data.data|safe }},
+                    borderColor: '#4BC0C0',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        {% endif %}
+    });
+</script>
+{% endif %}
+{% endblock %} 

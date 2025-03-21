@@ -1,0 +1,168 @@
+/* Scheduler Calendar Component Styles */
+
+.scheduler-container {
+    margin-bottom: 1.5rem;
+}
+
+/* Calendar styles */
+.calendar-container {
+    height: 500px;
+    font-size: 0.9rem;
+}
+
+/* Override some FullCalendar styles */
+.fc-button-primary {
+    background-color: #0d6efd !important;
+    border-color: #0d6efd !important;
+}
+
+.fc-button-primary:hover {
+    background-color: #0b5ed7 !important;
+    border-color: #0a58ca !important;
+}
+
+.fc-event {
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+
+.fc-daygrid-day.fc-day-today {
+    background-color: rgba(13, 110, 253, 0.1) !important;
+}
+
+.fc-col-header-cell {
+    font-weight: 600;
+}
+
+/* Time slot styles */
+.time-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.time-slot {
+    text-align: center;
+    padding: 0.5rem 0.25rem;
+    font-size: 0.8rem;
+    width: 100%;
+}
+
+.time-slot.active {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+.time-slot.optimal {
+    position: relative;
+}
+
+.time-slot.optimal::after {
+    content: '✓';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ffc107;
+    color: #212529;
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.time-slot.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Selected date display */
+.selected-date {
+    padding: 0.5rem;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    border: 1px solid #e9ecef;
+    margin-top: 0.25rem;
+}
+
+.selected-date-display {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+/* Scheduled items list */
+.scheduled-item {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.scheduled-item:hover {
+    background-color: #f8f9fa;
+}
+
+.scheduled-time {
+    font-weight: 500;
+}
+
+.scheduled-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+}
+
+.scheduled-actions button {
+    opacity: 0.6;
+    transition: opacity 0.15s ease;
+}
+
+.scheduled-item:hover .scheduled-actions button {
+    opacity: 1;
+}
+
+/* Card headers */
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+/* Optimal time indicator */
+.bi-lightning-charge-fill.text-warning {
+    color: #ffc107 !important;
+}
+
+/* Responsive calendar */
+@media (max-width: 768px) {
+    .calendar-container {
+        height: 400px;
+    }
+    
+    .time-slots-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .calendar-container {
+        height: 350px;
+    }
+    
+    .fc-toolbar-title {
+        font-size: 1.2rem !important;
+    }
+    
+    .fc-button {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.8rem !important;
+    }
+} 

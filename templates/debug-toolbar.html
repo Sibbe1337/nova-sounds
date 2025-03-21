@@ -1,0 +1,101 @@
+<!-- Debug Toolbar -->
+<div class="debug-toolbar" id="debugToolbar">
+  <div class="debug-toolbar-header">
+    <h3><i class="fas fa-bug"></i> Debug Toolbar</h3>
+    <button class="debug-toolbar-toggle" id="toggleDebugToolbar" aria-label="Toggle debug toolbar">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+  </div>
+
+  <div class="debug-toolbar-content">
+    <div class="debug-section">
+      <h4><i class="fas fa-microchip"></i> System Info</h4>
+      <div class="debug-info-grid">
+        <div class="debug-info-item">
+          <div class="debug-info-label">Environment:</div>
+          <div class="debug-info-value">{{ "Development" if dev_mode else "Production" }}</div>
+        </div>
+        <div class="debug-info-item">
+          <div class="debug-info-label">API Status:</div>
+          <div class="debug-info-value">
+            <span class="status-dot success"></span> Connected
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="debug-section debug-performance">
+      <h4>
+        <i class="fas fa-chart-line"></i> Performance
+        <button class="refresh-btn" id="refreshPerformanceBtn" title="Refresh performance data">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+      </h4>
+      
+      <div class="debug-info-item">
+        <div class="debug-info-label">Memory:</div>
+        <div class="debug-info-value" id="memoryUsage">Loading...</div>
+      </div>
+      <div class="progress-bar memory-progress">
+        <div class="progress-bar-fill success" style="width:10%"></div>
+      </div>
+      
+      <div class="debug-info-item" style="margin-top:12px">
+        <div class="debug-info-label">CPU:</div>
+        <div class="debug-info-value" id="cpuUsage">Loading...</div>
+      </div>
+      <div class="progress-bar cpu-progress">
+        <div class="progress-bar-fill success" style="width:10%"></div>
+      </div>
+    </div>
+
+    <div class="debug-section">
+      <h4><i class="fas fa-toggle-on"></i> Settings</h4>
+      <div class="debug-toggle-group">
+        <label class="toggle-switch">
+          <input type="checkbox" id="mockApiToggle">
+          <span class="toggle-slider"></span>
+          <span class="toggle-label">Mock API Responses</span>
+        </label>
+        
+        <label class="toggle-switch">
+          <input type="checkbox" id="mockAuthToggle">
+          <span class="toggle-slider"></span>
+          <span class="toggle-label">Mock Authentication</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="debug-section">
+      <h4><i class="fas fa-tools"></i> Actions</h4>
+      <div class="debug-actions">
+        <button class="btn btn-sm btn-outline-primary" id="clearCacheBtn">
+          <i class="fas fa-trash-alt"></i> Clear Cache
+        </button>
+        <button class="btn btn-sm btn-outline-primary" id="resetSessionBtn">
+          <i class="fas fa-redo"></i> Reset Session
+        </button>
+        <button class="btn btn-sm btn-outline-danger" id="testErrorBtn">
+          <i class="fas fa-bug"></i> Test Error
+        </button>
+      </div>
+    </div>
+
+    <div class="debug-section">
+      <h4><i class="fas fa-link"></i> Quick Links</h4>
+      <div class="debug-actions">
+        <a href="/debug/console" class="btn btn-sm btn-outline-primary">
+          <i class="fas fa-terminal"></i> Debug Console
+        </a>
+        <a href="/api/debug/report" target="_blank" class="btn btn-sm btn-outline-primary">
+          <i class="fas fa-file-alt"></i> Debug Report
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Debug Toolbar Toggle Button -->
+<button class="debug-toolbar-fab" id="showDebugToolbar" aria-label="Show debug toolbar">
+  <i class="fas fa-bug"></i>
+</button> 

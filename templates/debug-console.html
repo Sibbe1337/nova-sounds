@@ -1,0 +1,837 @@
+{% extends "base.html" %}
+
+{% block title %}Debug Console - YouTube Shorts Machine{% endblock %}
+
+{% block content %}
+<div class="debug-console-container">
+    <div class="debug-console-header">
+        <h1><i class="fas fa-bug"></i> Debug Console</h1>
+        <p class="debug-subtitle">Detailed system and application information to assist with debugging</p>
+    </div>
+    
+    <div class="debug-sections">
+        <!-- System Information Section -->
+        <div class="debug-card">
+            <div class="debug-card-header">
+                <h2><i class="fas fa-microchip"></i> System Information</h2>
+            </div>
+            <div class="debug-card-content">
+                <table class="debug-info-table">
+                    <tr>
+                        <td>Operating System:</td>
+                        <td>{{ system.os }} {{ system.version }}</td>
+                    </tr>
+                    <tr>
+                        <td>Python Version:</td>
+                        <td>{{ system.python }}</td>
+                    </tr>
+                    <tr>
+                        <td>Host Name:</td>
+                        <td>{{ system.hostname }}</td>
+                    </tr>
+                    <tr>
+                        <td>Processor:</td>
+                        <td>{{ system.processor }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- App Information Section -->
+        <div class="debug-card">
+            <div class="debug-card-header">
+                <h2><i class="fas fa-rocket"></i> Application Information</h2>
+            </div>
+            <div class="debug-card-content">
+                <table class="debug-info-table">
+                    <tr>
+                        <td>Version:</td>
+                        <td>{{ app.version }}</td>
+                    </tr>
+                    <tr>
+                        <td>Startup Time:</td>
+                        <td>{{ app.start_time }}</td>
+                    </tr>
+                    <tr>
+                        <td>API URL:</td>
+                        <td>{{ app.api_url }}</td>
+                    </tr>
+                    <tr>
+                        <td>API Status:</td>
+                        <td>
+                            {% if app.api_available %}
+                            <span class="status-indicator success">Available</span>
+                            {% else %}
+                            <span class="status-indicator error">Unavailable</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Performance Section -->
+        <div class="debug-card">
+            <div class="debug-card-header">
+                <h2><i class="fas fa-tachometer-alt"></i> Performance Metrics</h2>
+            </div>
+            <div class="debug-card-content">
+                <div class="debug-metrics">
+                    <div class="debug-metric">
+                        <div class="debug-metric-label">Memory Usage</div>
+                        <div class="debug-metric-value">{{ performance.memory_usage }}</div>
+                        <div class="progress-container" data-progress="0">
+                            <div class="progress-bar animated">
+                                <div class="progress-bar-fill" id="memoryProgressBar" style="width: 45%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="debug-metric">
+                        <div class="debug-metric-label">CPU Usage</div>
+                        <div class="debug-metric-value">{{ performance.cpu_percent }}%</div>
+                        <div class="progress-container" data-progress="0">
+                            <div class="progress-bar animated">
+                                <div class="progress-bar-fill" id="cpuProgressBar" style="width: {{ performance.cpu_percent }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="debug-metric">
+                        <div class="debug-metric-label">Uptime</div>
+                        <div class="debug-metric-value">{{ performance.uptime }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Debug Actions Section -->
+        <div class="debug-card">
+            <div class="debug-card-header">
+                <h2><i class="fas fa-tools"></i> Debug Actions</h2>
+            </div>
+            <div class="debug-card-content">
+                <div class="debug-actions">
+                    <button class="btn btn-warning btn-sm" id="clearCacheBtn">
+                        <i class="fas fa-trash"></i> Clear Cache
+                    </button>
+                    <button class="btn btn-danger btn-sm" id="resetSessionBtn">
+                        <i class="fas fa-refresh"></i> Reset Session
+                    </button>
+                    <button class="btn btn-primary btn-sm" id="triggerErrorBtn">
+                        <i class="fas fa-bug"></i> Trigger Test Error
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" id="reloadApiBtn">
+                        <i class="fas fa-sync"></i> Reload API Status
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Environment Variables Section -->
+        <div class="debug-card">
+            <div class="debug-card-header">
+                <h2><i class="fas fa-cogs"></i> Environment Variables</h2>
+                <div class="filter-input-container">
+                    <input type="text" id="envFilter" placeholder="Filter variables..." class="filter-input">
+                </div>
+            </div>
+            <div class="debug-card-content">
+                <div class="scrollable-content" id="envVarsContainer">
+                    <table class="debug-table" id="envVarsTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, value in env_vars.items() %}
+                            <tr>
+                                <td>{{ key }}</td>
+                                <td>{{ value }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Request Info Section -->
+        <div class="debug-card">
+            <div class="debug-card-header">
+                <h2><i class="fas fa-exchange-alt"></i> Request Information</h2>
+            </div>
+            <div class="debug-card-content">
+                <div class="scrollable-content">
+                    <table class="debug-info-table">
+                        <tr>
+                            <td>Path:</td>
+                            <td>{{ request.url.path }}</td>
+                        </tr>
+                        <tr>
+                            <td>Method:</td>
+                            <td>{{ request.method }}</td>
+                        </tr>
+                        <tr>
+                            <td>Client:</td>
+                            <td>{{ request.client.host }}</td>
+                        </tr>
+                        <tr>
+                            <td>User Agent:</td>
+                            <td>{{ request.headers.get('user-agent', 'Unknown') }}</td>
+                        </tr>
+                        <tr>
+                            <td>Headers:</td>
+                            <td>
+                                <div class="collapsible-content">
+                                    <button class="collapsible-trigger">Show Headers</button>
+                                    <div class="collapsible-body">
+                                        <pre>{% for key, value in request.headers.items() %}{{ key }}: {{ value }}
+{% endfor %}</pre>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Debug Logs Section -->
+    <div class="debug-card full-width">
+        <div class="debug-card-header">
+            <h2><i class="fas fa-list"></i> Debug Logs</h2>
+            <div class="header-controls">
+                <select id="logLevel" class="debug-select">
+                    <option value="all">All Levels</option>
+                    <option value="info">Info</option>
+                    <option value="warning">Warning</option>
+                    <option value="error">Error</option>
+                </select>
+                <button class="btn btn-sm btn-outline-primary" id="refreshLogsBtn">
+                    <i class="fas fa-refresh"></i> Refresh
+                </button>
+                <button class="btn btn-sm btn-outline-danger" id="clearLogsBtn">
+                    <i class="fas fa-trash"></i> Clear
+                </button>
+            </div>
+        </div>
+        <div class="debug-card-content">
+            <div class="debug-logs-container" id="debugLogs">
+                <div class="debug-log info">
+                    <span class="log-time">2025-03-20 15:30:45</span>
+                    <span class="log-level info">INFO</span>
+                    <span class="log-message">Application started successfully</span>
+                </div>
+                <div class="debug-log warning">
+                    <span class="log-time">2025-03-20 15:31:12</span>
+                    <span class="log-level warning">WARNING</span>
+                    <span class="log-message">Slow database query detected (took 2.5s)</span>
+                </div>
+                <div class="debug-log error">
+                    <span class="log-time">2025-03-20 15:32:30</span>
+                    <span class="log-level error">ERROR</span>
+                    <span class="log-message">Failed to connect to third-party API: timeout</span>
+                </div>
+                <div class="debug-log info">
+                    <span class="log-time">2025-03-20 15:33:05</span>
+                    <span class="log-level info">INFO</span>
+                    <span class="log-message">User login successful: user123</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Environment Variables Filter
+        const envFilter = document.getElementById('envFilter');
+        const envVarsTable = document.getElementById('envVarsTable');
+        const envRows = envVarsTable.querySelectorAll('tbody tr');
+        
+        if (envFilter) {
+            envFilter.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                
+                envRows.forEach(row => {
+                    const key = row.cells[0].textContent.toLowerCase();
+                    const value = row.cells[1].textContent.toLowerCase();
+                    
+                    if (key.includes(query) || value.includes(query)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        }
+        
+        // Collapsible Content Triggers
+        const collapsibleTriggers = document.querySelectorAll('.collapsible-trigger');
+        collapsibleTriggers.forEach(trigger => {
+            trigger.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                this.classList.toggle('active');
+                
+                if (this.classList.contains('active')) {
+                    this.textContent = 'Hide Headers';
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                } else {
+                    this.textContent = 'Show Headers';
+                    content.style.maxHeight = null;
+                }
+            });
+        });
+        
+        // Log Filter
+        const logLevel = document.getElementById('logLevel');
+        const debugLogs = document.getElementById('debugLogs');
+        const logEntries = debugLogs.querySelectorAll('.debug-log');
+        
+        if (logLevel) {
+            logLevel.addEventListener('change', function() {
+                const level = this.value;
+                
+                logEntries.forEach(log => {
+                    if (level === 'all' || log.classList.contains(level)) {
+                        log.style.display = '';
+                    } else {
+                        log.style.display = 'none';
+                    }
+                });
+            });
+        }
+        
+        // Refresh Logs Button
+        const refreshLogsBtn = document.getElementById('refreshLogsBtn');
+        if (refreshLogsBtn) {
+            refreshLogsBtn.addEventListener('click', function() {
+                // In a real app, this would fetch new logs from the server
+                // Here we'll just show a notification
+                if (window.showInfo) {
+                    window.showInfo('Logs refreshed');
+                }
+            });
+        }
+        
+        // Clear Logs Button
+        const clearLogsBtn = document.getElementById('clearLogsBtn');
+        if (clearLogsBtn) {
+            clearLogsBtn.addEventListener('click', function() {
+                // In a real app, this would clear logs on the server
+                // Here we'll just clear the display
+                debugLogs.innerHTML = '';
+                
+                if (window.showSuccess) {
+                    window.showSuccess('Logs cleared');
+                }
+            });
+        }
+        
+        // Debug Action Buttons
+        const clearCacheBtn = document.getElementById('clearCacheBtn');
+        if (clearCacheBtn) {
+            clearCacheBtn.addEventListener('click', async function() {
+                try {
+                    const response = await fetch('/debug/clear-cache', {
+                        method: 'POST'
+                    });
+                    
+                    if (response.ok) {
+                        if (window.showSuccess) {
+                            window.showSuccess('Cache cleared successfully');
+                        }
+                    } else {
+                        throw new Error('Failed to clear cache');
+                    }
+                } catch (error) {
+                    console.error('Error clearing cache:', error);
+                    // Simulate success in demo mode
+                    if (window.showSuccess) {
+                        window.showSuccess('Cache cleared successfully (simulated)');
+                    }
+                }
+            });
+        }
+        
+        // Reset Session Button
+        const resetSessionBtn = document.getElementById('resetSessionBtn');
+        if (resetSessionBtn) {
+            resetSessionBtn.addEventListener('click', async function() {
+                try {
+                    const response = await fetch('/debug/reset-session', {
+                        method: 'POST'
+                    });
+                    
+                    if (response.ok) {
+                        if (window.showSuccess) {
+                            window.showSuccess('Session reset successfully');
+                        }
+                    } else {
+                        throw new Error('Failed to reset session');
+                    }
+                } catch (error) {
+                    console.error('Error resetting session:', error);
+                    // Simulate success in demo mode
+                    if (window.showSuccess) {
+                        window.showSuccess('Session reset successfully (simulated)');
+                    }
+                }
+            });
+        }
+        
+        // Trigger Error Button
+        const triggerErrorBtn = document.getElementById('triggerErrorBtn');
+        if (triggerErrorBtn) {
+            triggerErrorBtn.addEventListener('click', async function() {
+                try {
+                    const response = await fetch('/debug/trigger-error', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: 'Test error triggered from debug console'
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    // This should not execute as the endpoint should throw an error
+                    console.log('Response:', data);
+                    
+                } catch (error) {
+                    if (window.showError) {
+                        window.showError('Test error triggered successfully');
+                    }
+                    console.error('Expected error:', error);
+                }
+            });
+        }
+        
+        // Reload API Status Button
+        const reloadApiBtn = document.getElementById('reloadApiBtn');
+        if (reloadApiBtn) {
+            reloadApiBtn.addEventListener('click', function() {
+                // In a real app, this would check API status
+                // Here we'll just show a notification
+                if (window.showInfo) {
+                    window.showInfo('API status refreshed');
+                }
+                
+                // Simulate reload with page refresh
+                window.location.reload();
+            });
+        }
+    });
+</script>
+
+<style>
+    .debug-console-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px 20px;
+    }
+    
+    .debug-console-header {
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    .debug-console-header h1 {
+        margin-bottom: 10px;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-color);
+    }
+    
+    .debug-subtitle {
+        color: var(--text-light);
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+    }
+    
+    .debug-sections {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .debug-card {
+        background: rgba(var(--card-bg-rgb), 0.7);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(var(--border-color-rgb), 0.2);
+    }
+    
+    .debug-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .debug-card.full-width {
+        grid-column: 1 / -1;
+    }
+    
+    .debug-card-header {
+        padding: 15px 20px;
+        border-bottom: 1px solid rgba(var(--border-color-rgb), 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .debug-card-header h2 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .debug-card-header h2 i {
+        color: var(--primary-color);
+    }
+    
+    .debug-card-header .header-controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .debug-card-content {
+        padding: 20px;
+    }
+    
+    .debug-info-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .debug-info-table tr:not(:last-child) {
+        border-bottom: 1px solid rgba(var(--border-color-rgb), 0.1);
+    }
+    
+    .debug-info-table td {
+        padding: 10px 0;
+    }
+    
+    .debug-info-table td:first-child {
+        font-weight: 500;
+        color: var(--text-color);
+        width: 40%;
+    }
+    
+    .debug-info-table td:last-child {
+        color: var(--text-light);
+    }
+    
+    /* Status indicators */
+    .status-indicator {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    
+    .status-indicator.success {
+        background-color: rgba(var(--success-color-rgb), 0.1);
+        color: var(--success-color);
+    }
+    
+    .status-indicator.error {
+        background-color: rgba(var(--danger-color-rgb), 0.1);
+        color: var(--danger-color);
+    }
+    
+    .status-indicator::before {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+    
+    .status-indicator.success::before {
+        background-color: var(--success-color);
+    }
+    
+    .status-indicator.error::before {
+        background-color: var(--danger-color);
+    }
+    
+    /* Progress bar */
+    .progress-container {
+        margin-top: 5px;
+    }
+    
+    .progress-bar {
+        height: 8px;
+        background-color: rgba(var(--border-color-rgb), 0.2);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .progress-bar-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.5s ease;
+    }
+    
+    #memoryProgressBar {
+        background: linear-gradient(90deg, var(--primary-color), #6a11cb);
+    }
+    
+    #cpuProgressBar {
+        background: linear-gradient(90deg, var(--primary-color), #2575fc);
+    }
+    
+    /* Debug metrics section */
+    .debug-metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    
+    .debug-metric {
+        padding: 15px;
+        border-radius: var(--radius-md);
+        background: rgba(var(--background-color-rgb), 0.4);
+        border: 1px solid rgba(var(--border-color-rgb), 0.2);
+    }
+    
+    .debug-metric-label {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 5px;
+    }
+    
+    .debug-metric-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 10px;
+    }
+    
+    /* Debug logs */
+    .debug-logs-container {
+        max-height: 400px;
+        overflow-y: auto;
+        font-family: var(--font-mono);
+        font-size: 0.9rem;
+        background: rgba(var(--background-color-rgb), 0.4);
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(var(--border-color-rgb), 0.2);
+    }
+    
+    .debug-log {
+        padding: 8px 15px;
+        border-bottom: 1px solid rgba(var(--border-color-rgb), 0.1);
+        display: flex;
+        gap: 10px;
+    }
+    
+    .debug-log:last-child {
+        border-bottom: none;
+    }
+    
+    .log-time {
+        color: var(--text-light);
+        white-space: nowrap;
+    }
+    
+    .log-level {
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    
+    .log-level.info {
+        background-color: rgba(var(--info-color-rgb), 0.1);
+        color: var(--info-color);
+    }
+    
+    .log-level.warning {
+        background-color: rgba(var(--warning-color-rgb), 0.1);
+        color: var(--warning-color);
+    }
+    
+    .log-level.error {
+        background-color: rgba(var(--danger-color-rgb), 0.1);
+        color: var(--danger-color);
+    }
+    
+    .log-message {
+        flex: 1;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+    
+    /* Scrollable content */
+    .scrollable-content {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    /* Environment variables table */
+    .debug-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .debug-table th, 
+    .debug-table td {
+        padding: 8px 15px;
+        text-align: left;
+        border-bottom: 1px solid rgba(var(--border-color-rgb), 0.1);
+    }
+    
+    .debug-table th {
+        font-weight: 600;
+        color: var(--text-color);
+        position: sticky;
+        top: 0;
+        background: var(--card-bg);
+        z-index: 10;
+    }
+    
+    /* Filter input */
+    .filter-input-container {
+        position: relative;
+    }
+    
+    .filter-input {
+        padding: 6px 10px;
+        padding-left: 30px;
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(var(--border-color-rgb), 0.3);
+        background: rgba(var(--background-color-rgb), 0.5);
+        font-size: 0.9rem;
+        width: 180px;
+    }
+    
+    .filter-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+    }
+    
+    .filter-input-container::before {
+        content: "\f002";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-light);
+        font-size: 0.9rem;
+    }
+    
+    /* Select */
+    .debug-select {
+        padding: 6px 10px;
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(var(--border-color-rgb), 0.3);
+        background: rgba(var(--background-color-rgb), 0.5);
+        font-size: 0.9rem;
+    }
+    
+    .debug-select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+    }
+    
+    /* Collapsible content */
+    .collapsible-content {
+        position: relative;
+    }
+    
+    .collapsible-trigger {
+        padding: 5px 10px;
+        border-radius: var(--radius-sm);
+        border: 1px solid rgba(var(--border-color-rgb), 0.3);
+        background: rgba(var(--background-color-rgb), 0.5);
+        font-size: 0.85rem;
+        cursor: pointer;
+    }
+    
+    .collapsible-trigger:hover {
+        background: rgba(var(--primary-color-rgb), 0.1);
+    }
+    
+    .collapsible-body {
+        display: none;
+        padding: 10px;
+        margin-top: 10px;
+        background: rgba(var(--background-color-rgb), 0.3);
+        border-radius: var(--radius-md);
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    
+    .collapsible-body pre {
+        margin: 0;
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        white-space: pre-wrap;
+    }
+    
+    .collapsible-content.active .collapsible-body {
+        display: block;
+    }
+    
+    /* Debug chart container */
+    .debug-chart-container {
+        background: rgba(var(--card-bg-rgb), 0.7);
+        border-radius: var(--radius-md);
+        padding: 15px;
+        margin-top: 20px;
+        border: 1px solid rgba(var(--border-color-rgb), 0.2);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 767px) {
+        .debug-sections {
+            grid-template-columns: 1fr;
+        }
+        
+        .debug-metrics {
+            grid-template-columns: 1fr;
+        }
+        
+        .debug-card-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .debug-card-header .header-controls {
+            width: 100%;
+            justify-content: space-between;
+        }
+        
+        .debug-log {
+            flex-direction: column;
+            gap: 5px;
+        }
+    }
+</style>
+{% endblock %} 

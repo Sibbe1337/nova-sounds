@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}UI Documentation - Component Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card mb-4 position-sticky" style="top: 1rem;">
+                <div class="card-header">
+                    <h3 class="card-title h5 mb-0">Documentation</h3>
+                </div>
+                <div class="card-body p-0">
+                    <nav class="nav flex-column">
+                        <a href="/ui-docs" class="nav-link{% if not component %} active{% endif %}">Overview</a>
+                        <a href="/ui-docs/guidelines" class="nav-link{% if request.url.path == '/ui-docs/guidelines' %} active{% endif %}">Design Guidelines</a>
+                        <a href="/ui-docs/theme" class="nav-link{% if request.url.path == '/ui-docs/theme' %} active{% endif %}">Theme & Variables</a>
+                        
+                        <div class="nav-divider my-2"></div>
+                        <div class="nav-header px-3 py-2 text-muted small fw-bold">Components</div>
+                        
+                        <a href="/ui-docs/components/buttons" class="nav-link{% if component == 'buttons' %} active{% endif %}">Buttons</a>
+                        <a href="/ui-docs/components/cards" class="nav-link{% if component == 'cards' %} active{% endif %}">Cards</a>
+                        <a href="/ui-docs/components/forms" class="nav-link{% if component == 'forms' %} active{% endif %}">Forms</a>
+                        <a href="/ui-docs/components/notifications" class="nav-link{% if component == 'notifications' %} active{% endif %}">Notifications</a>
+                        <a href="/ui-docs/components/loaders" class="nav-link{% if component == 'loaders' %} active{% endif %}">Loaders</a>
+                        <a href="/ui-docs/components/typography" class="nav-link{% if component == 'typography' %} active{% endif %}">Typography</a>
+                        <a href="/ui-docs/components/layout" class="nav-link{% if component == 'layout' %} active{% endif %}">Layout</a>
+                        <a href="/ui-docs/components/state" class="nav-link{% if component == 'state' %} active{% endif %}">UI States</a>
+                        <a href="/ui-docs/components/accessibility" class="nav-link{% if component == 'accessibility' %} active{% endif %}">Accessibility</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h1 class="mb-0 h3">UI Documentation</h1>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-primary" id="toggleThemeBtn" data-theme-toggle>
+                            <i class="fas fa-moon dark-only"></i>
+                            <i class="fas fa-sun light-only"></i>
+                            Toggle Theme
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="fas fa-info-circle fa-2x"></i>
+                            </div>
+                            <div>
+                                <h4 class="alert-heading">Component Documentation</h4>
+                                <p>This documentation showcases all UI components, patterns, and guidelines for the YouTube Shorts Machine application. Use these components to maintain a consistent user experience.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h2 class="mt-4 mb-3">Getting Started</h2>
+                    <p>The application UI is built using a custom component library with a focus on performance, accessibility, and responsive design. All components support both light and dark themes and are designed to provide a consistent user experience.</p>
+                    
+                    <h3 class="mt-4">Key Features</h3>
+                    <div class="row mt-3">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="card-title h5">
+                                        <i class="fas fa-palette text-primary me-2"></i>
+                                        Theme Support
+                                    </h4>
+                                    <p class="card-text">Built-in light and dark mode support with seamless theme switching.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="card-title h5">
+                                        <i class="fas fa-universal-access text-primary me-2"></i>
+                                        Accessibility
+                                    </h4>
+                                    <p class="card-text">WCAG AA compliant components with keyboard navigation and screen reader support.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="card-title h5">
+                                        <i class="fas fa-mobile-alt text-primary me-2"></i>
+                                        Responsive Design
+                                    </h4>
+                                    <p class="card-text">Mobile-first approach with responsive breakpoints for all screen sizes.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="card-title h5">
+                                        <i class="fas fa-bolt text-primary me-2"></i>
+                                        Performance
+                                    </h4>
+                                    <p class="card-text">Optimized for speed with minimal CSS and JavaScript footprint.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="mt-4">How To Use</h3>
+                    <p>Browse the documentation to see available components, their variants, and usage guidelines. Each component section includes code examples and best practices.</p>
+                    
+                    <div class="mt-4">
+                        <a href="/ui-docs/guidelines" class="btn btn-primary me-2">
+                            <i class="fas fa-book me-2"></i>
+                            Design Guidelines
+                        </a>
+                        <a href="/ui-docs/components/buttons" class="btn btn-outline-primary">
+                            <i class="fas fa-cubes me-2"></i>
+                            Browse Components
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize interactive examples
+    document.addEventListener('DOMContentLoaded', function() {
+        // Theme toggle button
+        const toggleThemeBtn = document.getElementById('toggleThemeBtn');
+        if (toggleThemeBtn) {
+            if (ThemeSwitcher) {
+                toggleThemeBtn.addEventListener('click', function() {
+                    ThemeSwitcher.toggleTheme();
+                });
+            } else if (App) {
+                toggleThemeBtn.addEventListener('click', function() {
+                    App.toggleTheme();
+                });
+            }
+        }
+        
+        // Code copy buttons
+        document.querySelectorAll('.code-block-header .copy-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const codeBlock = this.closest('.code-block').querySelector('code');
+                const textArea = document.createElement('textarea');
+                textArea.value = codeBlock.textContent;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                // Show success message
+                this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                }, 2000);
+            });
+        });
+    });
+</script>
+{% endblock %} 

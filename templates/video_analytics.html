@@ -1,0 +1,764 @@
+{% extends "base.html" %}
+
+{% block title %}Video Analytics | YouTube Shorts Machine{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Apple-inspired analytics styling */
+    :root {
+        --primary-color: #007AFF;
+        --secondary-color: #FF9500;
+        --success-color: #34C759;
+        --warning-color: #FF3B30;
+        --info-color: #5856D6;
+        --text-color: #1C1C1E;
+        --text-secondary: #8E8E93;
+        --background-color: #F2F2F7;
+        --card-background: #FFFFFF;
+        --border-color: #E5E5EA;
+        --chart-colors: #007AFF, #FF9500, #34C759, #FF3B30, #5856D6, #AF52DE, #FF2D55, #5AC8FA;
+    }
+
+    .analytics-wrapper {
+        background-color: var(--background-color);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+    
+    .metrics-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 2rem;
+        background-color: var(--card-background);
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .metrics-header h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-color);
+        margin: 0;
+    }
+    
+    .time-range-selector {
+        display: flex;
+        gap: 8px;
+        background-color: var(--background-color);
+        border-radius: 8px;
+        padding: 4px;
+    }
+    
+    .time-range-option {
+        padding: 6px 12px;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .time-range-option.active {
+        background-color: var(--card-background);
+        color: var(--primary-color);
+        font-weight: 500;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    
+    .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+        padding: 1.5rem 2rem;
+        background-color: var(--card-background);
+    }
+    
+    .metric-card {
+        background-color: var(--card-background);
+        border-radius: 12px;
+        padding: 1.25rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        border: 1px solid var(--border-color);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    .metric-name {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+    }
+    
+    .metric-value {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 0.75rem;
+    }
+    
+    .metric-trend {
+        display: flex;
+        align-items: center;
+        font-size: 0.875rem;
+    }
+    
+    .trend-up {
+        color: var(--success-color);
+    }
+    
+    .trend-down {
+        color: var(--warning-color);
+    }
+    
+    .trend-neutral {
+        color: var(--text-secondary);
+    }
+    
+    .trend-icon {
+        margin-right: 4px;
+    }
+    
+    .chart-section {
+        padding: 1.5rem 2rem;
+        background-color: var(--card-background);
+        margin-top: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.25rem;
+    }
+    
+    .chart-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-color);
+        margin: 0;
+    }
+    
+    .chart-container {
+        height: 300px;
+        position: relative;
+    }
+    
+    .video-preview {
+        background-color: var(--card-background);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .video-header {
+        padding: 1.25rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .video-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-color);
+        margin: 0 0 0.5rem 0;
+    }
+    
+    .video-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+    
+    .meta-item {
+        display: flex;
+        align-items: center;
+    }
+    
+    .meta-icon {
+        margin-right: 0.375rem;
+    }
+    
+    .video-body {
+        display: flex;
+        padding: 1.5rem;
+    }
+    
+    .video-thumbnail {
+        width: 280px;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-right: 1.5rem;
+    }
+    
+    .video-thumbnail img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+    
+    .video-details {
+        flex: 1;
+    }
+    
+    .video-description {
+        font-size: 0.9375rem;
+        line-height: 1.5;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+    }
+    
+    .video-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .video-tag {
+        display: inline-block;
+        padding: 0.25rem 0.625rem;
+        background-color: var(--background-color);
+        border-radius: 4px;
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 0.75rem;
+    }
+    
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.625rem 1rem;
+        border-radius: 8px;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+    
+    .primary-btn {
+        background-color: var(--primary-color);
+        color: white;
+    }
+    
+    .primary-btn:hover {
+        background-color: #0062CC;
+    }
+    
+    .secondary-btn {
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
+    
+    .secondary-btn:hover {
+        background-color: #E5E5EA;
+    }
+    
+    .btn-icon {
+        margin-right: 0.5rem;
+    }
+    
+    .audience-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .audience-card {
+        background-color: var(--card-background);
+        border-radius: 12px;
+        padding: 1.25rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        border: 1px solid var(--border-color);
+    }
+    
+    .audience-header {
+        margin-bottom: 1rem;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+    
+    .no-data-message {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+        background-color: var(--background-color);
+        border-radius: 8px;
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+    }
+    
+    @media (max-width: 768px) {
+        .video-body {
+            flex-direction: column;
+        }
+        
+        .video-thumbnail {
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 1rem;
+        }
+        
+        .summary-cards {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="analytics-wrapper">
+    <div class="video-preview">
+        <div class="video-header">
+            <h1 class="video-title">{{ video.title }}</h1>
+            <div class="video-meta">
+                <div class="meta-item">
+                    <i class="fas fa-calendar meta-icon"></i>
+                    <span>{{ video.upload_date }}</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-eye meta-icon"></i>
+                    <span>{{ video.view_count }} views</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-thumbs-up meta-icon"></i>
+                    <span>{{ video.like_count }} likes</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-comment meta-icon"></i>
+                    <span>{{ video.comment_count }} comments</span>
+                </div>
+                {% if video.is_shorts %}
+                <div class="meta-item">
+                    <i class="fas fa-mobile-alt meta-icon"></i>
+                    <span>Shorts</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="video-body">
+            <div class="video-thumbnail">
+                {% if video.youtube_id and not mock_upload %}
+                <img src="{{ video.thumbnail_url }}" alt="{{ video.title }}">
+                {% else %}
+                <img src="{{ video.thumbnail_url }}" alt="{{ video.title }}">
+                {% endif %}
+            </div>
+            
+            <div class="video-details">
+                <p class="video-description">{{ video.description }}</p>
+                
+                {% if video.tags %}
+                <div class="video-tags">
+                    {% for tag in video.tags %}
+                    <span class="video-tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <div class="action-buttons">
+                    {% if not mock_upload %}
+                    <a href="https://www.youtube.com/watch?v={{ video.youtube_id }}" target="_blank" class="action-btn primary-btn">
+                        <i class="fas fa-play btn-icon"></i> Watch on YouTube
+                    </a>
+                    {% endif %}
+                    <a href="{{ request.headers.get('referer', '/youtube/dashboard') }}" class="action-btn secondary-btn">
+                        <i class="fas fa-arrow-left btn-icon"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="metrics-header">
+        <h2>Performance Analytics</h2>
+        <div class="time-range-selector">
+            <div class="time-range-option active" data-range="7">7 days</div>
+            <div class="time-range-option" data-range="30">30 days</div>
+            <div class="time-range-option" data-range="90">90 days</div>
+            <div class="time-range-option" data-range="all">All time</div>
+        </div>
+    </div>
+    
+    <div class="summary-cards">
+        <div class="metric-card">
+            <div class="metric-name">Views</div>
+            <div class="metric-value">{{ video.view_count }}</div>
+            <div class="metric-trend trend-up">
+                <i class="fas fa-arrow-up trend-icon"></i>
+                <span>23% vs. previous period</span>
+            </div>
+        </div>
+        
+        <div class="metric-card">
+            <div class="metric-name">Watch Time</div>
+            <div class="metric-value">{{ video.watch_time|default('14.5 hrs') }}</div>
+            <div class="metric-trend trend-up">
+                <i class="fas fa-arrow-up trend-icon"></i>
+                <span>18% vs. previous period</span>
+            </div>
+        </div>
+        
+        <div class="metric-card">
+            <div class="metric-name">Likes</div>
+            <div class="metric-value">{{ video.like_count }}</div>
+            <div class="metric-trend trend-up">
+                <i class="fas fa-arrow-up trend-icon"></i>
+                <span>31% vs. previous period</span>
+            </div>
+        </div>
+        
+        <div class="metric-card">
+            <div class="metric-name">Engagement Rate</div>
+            <div class="metric-value">{{ engagement_rate|default('8.2') }}%</div>
+            <div class="metric-trend trend-up">
+                <i class="fas fa-arrow-up trend-icon"></i>
+                <span>4% vs. previous period</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="chart-section">
+    <div class="chart-header">
+        <h3 class="chart-title">Views Over Time</h3>
+    </div>
+    <div class="chart-container">
+        <canvas id="viewsChart"></canvas>
+    </div>
+</div>
+
+<div class="audience-section">
+    <div class="audience-card">
+        <h3 class="audience-header">Traffic Sources</h3>
+        {% if traffic_sources %}
+        <div class="chart-container" style="height: 240px;">
+            <canvas id="trafficSourcesChart"></canvas>
+        </div>
+        {% else %}
+        <div class="no-data-message">
+            <p>No traffic source data available for this video</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="audience-card">
+        <h3 class="audience-header">Viewer Demographics</h3>
+        {% if demographics %}
+        <div class="chart-container" style="height: 240px;">
+            <canvas id="demographicsChart"></canvas>
+        </div>
+        {% else %}
+        <div class="no-data-message">
+            <p>No demographics data available for this video</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="chart-section">
+    <div class="chart-header">
+        <h3 class="chart-title">Audience Retention</h3>
+    </div>
+    {% if retention_data %}
+    <div class="chart-container">
+        <canvas id="retentionChart"></canvas>
+    </div>
+    {% else %}
+    <div class="no-data-message">
+        <p>No retention data available for this video</p>
+    </div>
+    {% endif %}
+</div>
+
+{% if dev_mode %}
+<div class="debug-mode-indicator" style="margin-top: 1.5rem;">
+    <p><strong>Debug Mode:</strong> Displaying mock analytics data. In production, this data would come from the YouTube Analytics API.</p>
+</div>
+{% endif %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set up chart color scheme
+        const chartColors = [
+            '#007AFF', '#FF9500', '#34C759', '#FF3B30', 
+            '#5856D6', '#AF52DE', '#FF2D55', '#5AC8FA'
+        ];
+        
+        // Time range selector
+        document.querySelectorAll('.time-range-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.time-range-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+                updateCharts(this.dataset.range);
+            });
+        });
+        
+        // Get view count safely from template
+        const viewCount = parseInt('{{ video.view_count|replace(",", "")|default(5000) }}'.replace(/\D/g, '')) || 5000;
+        
+        // Generate mock data for views chart
+        function generateMockViewsData(days) {
+            const data = [];
+            const labels = [];
+            const now = new Date();
+            
+            for (let i = days; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(now.getDate() - i);
+                labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+                
+                // Create some realistic looking data with a trend and some variation
+                let value = Math.floor(viewCount / 2 * Math.random() * (1 - (i / days)) + 5);
+                data.push(value);
+            }
+            
+            return { labels, data };
+        }
+        
+        // Initialize views chart
+        const viewsCtx = document.getElementById('viewsChart').getContext('2d');
+        const viewsData = generateMockViewsData(7);
+        const viewsChart = new Chart(viewsCtx, {
+            type: 'line',
+            data: {
+                labels: viewsData.labels,
+                datasets: [{
+                    label: 'Views',
+                    data: viewsData.data,
+                    borderColor: chartColors[0],
+                    backgroundColor: hexToRgba(chartColors[0], 0.1),
+                    tension: 0.3,
+                    fill: true,
+                    pointBackgroundColor: chartColors[0],
+                    pointRadius: 3,
+                    pointHoverRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return `Views: ${context.raw}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // JavaScript-friendly way to handle Jinja conditionals
+        /* [START_JINJA {% if traffic_sources %} END_JINJA] */
+        try {
+            // Traffic sources chart - safely parse template data
+            const trafficSourcesLabels = JSON.parse('{{ traffic_sources.labels|tojson|safe }}' || '[]');
+            const trafficSourcesData = JSON.parse('{{ traffic_sources.data|tojson|safe }}' || '[]');
+            
+            const trafficSourcesCtx = document.getElementById('trafficSourcesChart');
+            if (trafficSourcesCtx) {
+                const trafficSourcesChart = new Chart(trafficSourcesCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: trafficSourcesLabels,
+                        datasets: [{
+                            data: trafficSourcesData,
+                            backgroundColor: chartColors,
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    boxWidth: 12,
+                                    padding: 15
+                                }
+                            }
+                        },
+                        cutout: '65%'
+                    }
+                });
+            }
+        } catch (e) {
+            console.error('Error initializing traffic sources chart:', e);
+        }
+        /* [START_JINJA {% endif %} END_JINJA] */
+        
+        /* [START_JINJA {% if demographics %} END_JINJA] */
+        try {
+            // Demographics chart - safely parse template data
+            const demographicsLabels = JSON.parse('{{ demographics.labels|tojson|safe }}' || '[]');
+            const demographicsData = JSON.parse('{{ demographics.data|tojson|safe }}' || '[]');
+            
+            const demographicsCtx = document.getElementById('demographicsChart');
+            if (demographicsCtx) {
+                const demographicsChart = new Chart(demographicsCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: demographicsLabels,
+                        datasets: [{
+                            label: 'Age Groups',
+                            data: demographicsData,
+                            backgroundColor: chartColors[2],
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (e) {
+            console.error('Error initializing demographics chart:', e);
+        }
+        /* [START_JINJA {% endif %} END_JINJA] */
+        
+        /* [START_JINJA {% if retention_data %} END_JINJA] */
+        try {
+            // Retention chart - safely parse template data
+            const retentionLabels = JSON.parse('{{ retention_data.labels|tojson|safe }}' || '[]');
+            const retentionData = JSON.parse('{{ retention_data.data|tojson|safe }}' || '[]');
+            
+            const retentionCtx = document.getElementById('retentionChart');
+            if (retentionCtx) {
+                const retentionChart = new Chart(retentionCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: retentionLabels,
+                        datasets: [{
+                            label: 'Audience Retention',
+                            data: retentionData,
+                            borderColor: chartColors[3],
+                            backgroundColor: hexToRgba(chartColors[3], 0.1),
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (e) {
+            console.error('Error initializing retention chart:', e);
+        }
+        /* [START_JINJA {% endif %} END_JINJA] */
+        
+        // Update charts based on time range
+        function updateCharts(range) {
+            // Update views chart
+            const newViewsData = generateMockViewsData(range === 'all' ? 180 : parseInt(range));
+            viewsChart.data.labels = newViewsData.labels;
+            viewsChart.data.datasets[0].data = newViewsData.data;
+            viewsChart.update();
+            
+            // You would also update other charts based on the time range here
+            // In a real implementation with actual data
+        }
+        
+        // Helper function to convert hex to rgba for chart backgrounds
+        function hexToRgba(hex, alpha) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %} 

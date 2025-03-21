@@ -1,0 +1,146 @@
+/* 
+ * Notifications CSS
+ * Styling for notification system
+ */
+
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 350px;
+    width: 100%;
+}
+
+.notification {
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: var(--radius-md);
+    padding: 15px;
+    margin-bottom: 10px;
+    transform: translateX(120%);
+    transition: transform 0.3s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    border-left: 4px solid var(--primary-color);
+    display: flex;
+    align-items: flex-start;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.notification-success {
+    border-color: var(--success-color);
+}
+
+.notification.notification-error {
+    border-color: var(--error-color);
+}
+
+.notification.notification-warning {
+    border-color: var(--warning-color);
+}
+
+.notification.notification-info {
+    border-color: var(--info-color);
+}
+
+.notification-icon {
+    margin-right: 12px;
+    font-size: 20px;
+    min-width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-success .notification-icon {
+    color: var(--success-color);
+}
+
+.notification-error .notification-icon {
+    color: var(--error-color);
+}
+
+.notification-warning .notification-icon {
+    color: var(--warning-color);
+}
+
+.notification-info .notification-icon {
+    color: var(--info-color);
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-title {
+    font-weight: 600;
+    margin: 0 0 5px 0;
+    color: var(--text-color);
+}
+
+.notification-message {
+    margin: 0;
+    color: var(--text-color-light);
+    font-size: 0.9rem;
+}
+
+.notification-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: var(--text-color-light);
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.notification-close:hover {
+    opacity: 1;
+}
+
+.notification-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background-color: var(--primary-color);
+    width: 100%;
+    transform-origin: left;
+}
+
+.notification-success .notification-progress {
+    background-color: var(--success-color);
+}
+
+.notification-error .notification-progress {
+    background-color: var(--error-color);
+}
+
+.notification-warning .notification-progress {
+    background-color: var(--warning-color);
+}
+
+.notification-info .notification-progress {
+    background-color: var(--info-color);
+}
+
+/* Animation for notification dismissal */
+.notification.removing {
+    transform: translateX(120%);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 576px) {
+    .notification-container {
+        max-width: calc(100% - 30px);
+        right: 15px;
+        top: 15px;
+    }
+} 

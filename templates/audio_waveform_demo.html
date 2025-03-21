@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}Waveform Audio Player Demo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h1 class="gradient-text">Waveform Audio Player</h1>
+            <p class="lead">Interactive audio visualization with waveform display</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card glass-panel">
+                <div class="card-header">
+                    <h3>Audio Track Selection</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="track-selector">Select a track:</label>
+                        <select id="track-selector" class="form-control mb-4">
+                            {% for track in music_tracks %}
+                            <option value="{{ track.id }}">{{ track.title }} - {{ track.artist }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Waveform player container -->
+                    <div class="audio-player-container">
+                        <audio id="audio-element" controls></audio>
+                        
+                        <div id="waveform-container" 
+                             class="waveform-container"
+                             data-waveform-player
+                             data-audio-player="audio-element"></div>
+                    </div>
+                    
+                    <!-- Track information -->
+                    <div class="track-info-panel mt-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 id="track-title">Select a track</h5>
+                                <p id="track-artist" class="text-muted"></p>
+                                
+                                <div class="track-metadata mt-3">
+                                    <span id="track-genre" class="badge badge-primary mr-2"></span>
+                                    <span id="track-mood" class="badge badge-info mr-2"></span>
+                                    <span id="track-bpm" class="badge badge-secondary"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="license-info">
+                                    <h6>License Information</h6>
+                                    <p id="license-text">Select a track to view license information</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Advanced usage examples -->
+            <div class="card glass-panel mt-4">
+                <div class="card-header">
+                    <h3>More Examples</h3>
+                </div>
+                <div class="card-body">
+                    <h5>Custom Colors</h5>
+                    <div class="audio-player-container">
+                        <audio id="custom-audio" controls></audio>
+                        <div id="custom-waveform" class="waveform-container"></div>
+                    </div>
+                    
+                    <h5 class="mt-4">Playlist Integration</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="list-group" id="track-list">
+                                {% for track in music_tracks[:5] %}
+                                <button class="list-group-item list-group-item-action" 
+                                        data-track-id="{{ track.id }}">
+                                    {{ track.title }}
+                                </button>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="audio-player-container">
+                                <audio id="playlist-audio" controls></audio>
+                                <div id="playlist-waveform" class="waveform-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Waveform Player Library -->
+<script src="/static/js/waveform-player.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Create main waveform player
+        const mainPlayer = new WaveformPlayer({
+            containerId: 'waveform-container',
+            audioId: 'audio-element',
+            apiEndpoint: '/music'
+        });
+        
+        // Track selector handler
+        const trackSelector = document.getElementById('track-selector');
+        if (trackSelector) {
+            trackSelector.addEventListener('change', function() {
+                const trackId = this.value;
+                if (trackId) {
+                    // Load track in waveform player
+                    mainPlayer.loadTrack(trackId);
+                    
+                    // Update track information
+                    updateTrackInfo(trackId);
+                }
+            });
+            
+            // Initialize with first track
+            if (trackSelector.options.length > 0) {
+                const initialTrackId = trackSelector.value;
+                mainPlayer.loadTrack(initialTrackId);
+                updateTrackInfo(initialTrackId);
+            }
+        }
+        
+        // Custom colors example
+        const customPlayer = new WaveformPlayer({
+            containerId: 'custom-waveform',
+            audioId: 'custom-audio',
+            apiEndpoint: '/music',
+            backgroundColor: 'rgba(100, 149, 237, 0.2)',
+            progressColor: '#FF5722'
+        });
+        
+        // Load a track in the custom player (if available)
+        if (trackSelector && trackSelector.options.length > 1) {
+            customPlayer.loadTrack(trackSelector.options[1].value);
+        }
+        
+        // Playlist example
+        const playlistPlayer = new WaveformPlayer({
+            containerId: 'playlist-waveform',
+            audioId: 'playlist-audio',
+            apiEndpoint: '/music',
+            backgroundColor: 'rgba(50, 50, 50, 0.2)',
+            progressColor: '#9C27B0'
+        });
+        
+        // Playlist buttons
+        const trackButtons = document.querySelectorAll('#track-list button');
+        trackButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const trackId = this.dataset.trackId;
+                if (trackId) {
+                    // Remove active class from all buttons
+                    trackButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Load track in playlist player
+                    playlistPlayer.loadTrack(trackId);
+                }
+            });
+        });
+        
+        // Activate first track in playlist
+        if (trackButtons.length > 0) {
+            trackButtons[0].click();
+        }
+        
+        // Function to update track information
+        function updateTrackInfo(trackId) {
+            fetch(`/music/${trackId}/metadata`)
+                .then(response => response.json())
+                .then(metadata => {
+                    // Update track information
+                    document.getElementById('track-title').textContent = metadata.title || 'Unknown Track';
+                    document.getElementById('track-artist').textContent = metadata.artist || 'Unknown Artist';
+                    document.getElementById('track-genre').textContent = metadata.genre || 'Unknown Genre';
+                    document.getElementById('track-mood').textContent = metadata.mood || 'Unknown Mood';
+                    document.getElementById('track-bpm').textContent = metadata.bpm ? `BPM: ${metadata.bpm}` : 'Unknown BPM';
+                    document.getElementById('license-text').textContent = metadata.license_info || 'Standard license applies';
+                })
+                .catch(error => {
+                    console.error('Error fetching track metadata:', error);
+                });
+        }
+    });
+</script>
+{% endblock %} 

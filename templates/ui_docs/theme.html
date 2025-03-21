@@ -1,0 +1,539 @@
+{% extends "ui_docs/index.html" %}
+
+{% block title %}UI Docs - Theme & Variables{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card mb-4 position-sticky" style="top: 1rem;">
+                <div class="card-header">
+                    <h3 class="card-title h5 mb-0">Documentation</h3>
+                </div>
+                <div class="card-body p-0">
+                    <nav class="nav flex-column">
+                        <a href="/ui-docs" class="nav-link{% if not component %} active{% endif %}">Overview</a>
+                        <a href="/ui-docs/guidelines" class="nav-link{% if request.url.path == '/ui-docs/guidelines' %} active{% endif %}">Design Guidelines</a>
+                        <a href="/ui-docs/theme" class="nav-link{% if request.url.path == '/ui-docs/theme' %} active{% endif %}">Theme & Variables</a>
+                        
+                        <div class="nav-divider my-2"></div>
+                        <div class="nav-header px-3 py-2 text-muted small fw-bold">Components</div>
+                        
+                        <a href="/ui-docs/components/buttons" class="nav-link{% if component == 'buttons' %} active{% endif %}">Buttons</a>
+                        <a href="/ui-docs/components/cards" class="nav-link{% if component == 'cards' %} active{% endif %}">Cards</a>
+                        <a href="/ui-docs/components/forms" class="nav-link{% if component == 'forms' %} active{% endif %}">Forms</a>
+                        <a href="/ui-docs/components/notifications" class="nav-link{% if component == 'notifications' %} active{% endif %}">Notifications</a>
+                        <a href="/ui-docs/components/loaders" class="nav-link{% if component == 'loaders' %} active{% endif %}">Loaders</a>
+                        <a href="/ui-docs/components/typography" class="nav-link{% if component == 'typography' %} active{% endif %}">Typography</a>
+                        <a href="/ui-docs/components/layout" class="nav-link{% if component == 'layout' %} active{% endif %}">Layout</a>
+                        <a href="/ui-docs/components/state" class="nav-link{% if component == 'state' %} active{% endif %}">UI States</a>
+                        <a href="/ui-docs/components/accessibility" class="nav-link{% if component == 'accessibility' %} active{% endif %}">Accessibility</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h1 class="mb-0 h3">Theme & Variables</h1>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-primary" id="toggleThemeBtn" data-theme-toggle>
+                            <i class="fas fa-moon dark-only"></i>
+                            <i class="fas fa-sun light-only"></i>
+                            Toggle Theme
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="lead">The application uses CSS custom properties (variables) to maintain consistent theming across light and dark modes. Use these variables in your components for consistent styling.</p>
+                    
+                    <!-- Color Palette -->
+                    <section class="mb-5">
+                        <h2>Color Palette</h2>
+                        <p>Our color system is designed to work across both light and dark themes while maintaining accessibility standards.</p>
+                        
+                        <h3 class="mt-4 mb-3">Primary Colors</h3>
+                        <div class="row">
+                            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body p-0">
+                                        <div class="color-swatch" style="background-color: var(--primary-color); height: 100px;"></div>
+                                        <div class="p-3">
+                                            <h4 class="h6 mb-1">Primary Color</h4>
+                                            <code class="small">var(--primary-color)</code>
+                                            <p class="small text-color-value mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body p-0">
+                                        <div class="color-swatch" style="background-color: var(--accent-color); height: 100px;"></div>
+                                        <div class="p-3">
+                                            <h4 class="h6 mb-1">Accent Color</h4>
+                                            <code class="small">var(--accent-color)</code>
+                                            <p class="small text-color-value mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 class="mt-4 mb-3">UI Colors</h3>
+                        <div class="row">
+                            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body p-0">
+                                        <div class="color-swatch" style="background-color: var(--background-color); height: 100px;"></div>
+                                        <div class="p-3">
+                                            <h4 class="h6 mb-1">Background</h4>
+                                            <code class="small">var(--background-color)</code>
+                                            <p class="small text-color-value mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body p-0">
+                                        <div class="color-swatch" style="background-color: var(--card-bg); height: 100px;"></div>
+                                        <div class="p-3">
+                                            <h4 class="h6 mb-1">Card Background</h4>
+                                            <code class="small">var(--card-bg)</code>
+                                            <p class="small text-color-value mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body p-0">
+                                        <div class="color-swatch" style="background-color: var(--border-color); height: 100px;"></div>
+                                        <div class="p-3">
+                                            <h4 class="h6 mb-1">Border Color</h4>
+                                            <code class="small">var(--border-color)</code>
+                                            <p class="small text-color-value mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 class="mt-4 mb-3">Text Colors</h3>
+                        <div class="row">
+                            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body p-0">
+                                        <div class="color-swatch" style="background-color: var(--text-color); height: 100px;"></div>
+                                        <div class="p-3">
+                                            <h4 class="h6 mb-1">Text Color</h4>
+                                            <code class="small">var(--text-color)</code>
+                                            <p class="small text-color-value mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body p-0">
+                                        <div class="color-swatch" style="background-color: var(--text-color-light); height: 100px;"></div>
+                                        <div class="p-3">
+                                            <h4 class="h6 mb-1">Text Light</h4>
+                                            <code class="small">var(--text-color-light)</code>
+                                            <p class="small text-color-value mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 class="mt-4 mb-3">Semantic Colors</h3>
+                        <div class="row">
+                            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body p-0">
+                                        <div class="color-swatch" style="background-color: var(--success-color); height: 100px;"></div>
+                                        <div class="p-3">
+                                            <h4 class="h6 mb-1">Success</h4>
+                                            <code class="small">var(--success-color)</code>
+                                            <p class="small text-color-value mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body p-0">
+                                        <div class="color-swatch" style="background-color: var(--error-color); height: 100px;"></div>
+                                        <div class="p-3">
+                                            <h4 class="h6 mb-1">Error</h4>
+                                            <code class="small">var(--error-color)</code>
+                                            <p class="small text-color-value mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body p-0">
+                                        <div class="color-swatch" style="background-color: var(--warning-color); height: 100px;"></div>
+                                        <div class="p-3">
+                                            <h4 class="h6 mb-1">Warning</h4>
+                                            <code class="small">var(--warning-color)</code>
+                                            <p class="small text-color-value mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body p-0">
+                                        <div class="color-swatch" style="background-color: var(--info-color); height: 100px;"></div>
+                                        <div class="p-3">
+                                            <h4 class="h6 mb-1">Info</h4>
+                                            <code class="small">var(--info-color)</code>
+                                            <p class="small text-color-value mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Typography -->
+                    <section class="mb-5">
+                        <h2>Typography</h2>
+                        <p>We use a consistent typography system with a hierarchical scale that works across devices.</p>
+                        
+                        <h1>Heading 1 (h1)</h1>
+                        <h2>Heading 2 (h2)</h2>
+                        <h3>Heading 3 (h3)</h3>
+                        <h4>Heading 4 (h4)</h4>
+                        <h5>Heading 5 (h5)</h5>
+                        <h6>Heading 6 (h6)</h6>
+                        
+                        <p class="lead mt-4">Lead paragraph text is used for introductory sections.</p>
+                        
+                        <p>Standard paragraph text is used for most content. It should be easy to read with good contrast against the background.</p>
+                        
+                        <p><small>Small text is used for less important information.</small></p>
+                        
+                        <div class="code-block mb-3 mt-4">
+                            <div class="code-block-header d-flex justify-content-between p-2 bg-light border">
+                                <span>CSS Variables</span>
+                                <button class="copy-btn btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre class="language-css m-0"><code>:root {
+    /* Font family */
+    --font-primary: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    
+    /* Font sizes */
+    --font-size-xs: 0.75rem;    /* 12px */
+    --font-size-sm: 0.875rem;   /* 14px */
+    --font-size-base: 1rem;     /* 16px */
+    --font-size-md: 1.125rem;   /* 18px */
+    --font-size-lg: 1.25rem;    /* 20px */
+    --font-size-xl: 1.5rem;     /* 24px */
+    --font-size-2xl: 1.875rem;  /* 30px */
+    --font-size-3xl: 2.25rem;   /* 36px */
+    
+    /* Line heights */
+    --line-height-tight: 1.25;
+    --line-height-base: 1.5;
+    --line-height-loose: 1.75;
+    
+    /* Font weights */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+}</code></pre>
+                        </div>
+                    </section>
+                    
+                    <!-- Spacing -->
+                    <section class="mb-5">
+                        <h2>Spacing</h2>
+                        <p>Consistent spacing helps create visual rhythm and hierarchy. Our spacing system uses a 4px base unit.</p>
+                        
+                        <div class="row">
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div class="spacing-demo" style="width: 0.25rem; height: 0.25rem;"></div>
+                                            <div class="ms-3">
+                                                <code>--space-1</code>
+                                                <div class="small text-muted">0.25rem (4px)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div class="spacing-demo" style="width: 0.5rem; height: 0.5rem;"></div>
+                                            <div class="ms-3">
+                                                <code>--space-2</code>
+                                                <div class="small text-muted">0.5rem (8px)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div class="spacing-demo" style="width: 0.75rem; height: 0.75rem;"></div>
+                                            <div class="ms-3">
+                                                <code>--space-3</code>
+                                                <div class="small text-muted">0.75rem (12px)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div class="spacing-demo" style="width: 1rem; height: 1rem;"></div>
+                                            <div class="ms-3">
+                                                <code>--space-4</code>
+                                                <div class="small text-muted">1rem (16px)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div class="spacing-demo" style="width: 1.5rem; height: 1.5rem;"></div>
+                                            <div class="ms-3">
+                                                <code>--space-5</code>
+                                                <div class="small text-muted">1.5rem (24px)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div class="spacing-demo" style="width: 2rem; height: 2rem;"></div>
+                                            <div class="ms-3">
+                                                <code>--space-6</code>
+                                                <div class="small text-muted">2rem (32px)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div class="spacing-demo" style="width: 2.5rem; height: 2.5rem;"></div>
+                                            <div class="ms-3">
+                                                <code>--space-7</code>
+                                                <div class="small text-muted">2.5rem (40px)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div class="spacing-demo" style="width: 3rem; height: 3rem;"></div>
+                                            <div class="ms-3">
+                                                <code>--space-8</code>
+                                                <div class="small text-muted">3rem (48px)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Border Radius -->
+                    <section class="mb-5">
+                        <h2>Border Radius</h2>
+                        <p>Consistent border radius values help maintain a unified look.</p>
+                        
+                        <div class="row">
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="radius-demo mx-auto" style="border-radius: var(--radius-sm);"></div>
+                                        <div class="mt-2">
+                                            <code>--radius-sm</code>
+                                            <div class="small text-muted">0.25rem (4px)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="radius-demo mx-auto" style="border-radius: var(--radius-md);"></div>
+                                        <div class="mt-2">
+                                            <code>--radius-md</code>
+                                            <div class="small text-muted">0.5rem (8px)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="radius-demo mx-auto" style="border-radius: var(--radius-lg);"></div>
+                                        <div class="mt-2">
+                                            <code>--radius-lg</code>
+                                            <div class="small text-muted">0.75rem (12px)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="radius-demo mx-auto" style="border-radius: var(--radius-xl);"></div>
+                                        <div class="mt-2">
+                                            <code>--radius-xl</code>
+                                            <div class="small text-muted">1rem (16px)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="radius-demo mx-auto" style="border-radius: var(--radius-full);"></div>
+                                        <div class="mt-2">
+                                            <code>--radius-full</code>
+                                            <div class="small text-muted">9999px (circle)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Box Shadows -->
+                    <section class="mb-5">
+                        <h2>Box Shadows</h2>
+                        <p>Shadows add depth and hierarchy to the UI.</p>
+                        
+                        <div class="row">
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="shadow-demo mx-auto" style="box-shadow: var(--shadow-sm);"></div>
+                                        <div class="mt-3">
+                                            <code>--shadow-sm</code>
+                                            <div class="small text-muted">Small shadow</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="shadow-demo mx-auto" style="box-shadow: var(--shadow-md);"></div>
+                                        <div class="mt-3">
+                                            <code>--shadow-md</code>
+                                            <div class="small text-muted">Medium shadow</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="shadow-demo mx-auto" style="box-shadow: var(--shadow-lg);"></div>
+                                        <div class="mt-3">
+                                            <code>--shadow-lg</code>
+                                            <div class="small text-muted">Large shadow</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize color values
+        updateColorValues();
+        
+        // Toggle theme button
+        const toggleThemeBtn = document.getElementById('toggleThemeBtn');
+        if (toggleThemeBtn) {
+            toggleThemeBtn.addEventListener('click', function() {
+                if (window.ThemeSwitcher) {
+                    window.ThemeSwitcher.toggleTheme();
+                } else if (window.App) {
+                    window.App.toggleTheme();
+                }
+                // Update color values after theme change
+                setTimeout(updateColorValues, 100);
+            });
+        }
+        
+        // Update CSS variable values
+        function updateColorValues() {
+            document.querySelectorAll('.color-swatch').forEach(swatch => {
+                const valueEl = swatch.closest('.card').querySelector('.text-color-value');
+                const color = getComputedStyle(swatch).backgroundColor;
+                valueEl.textContent = color;
+            });
+        }
+    });
+</script>
+
+<style>
+    /* Demo elements for theme page */
+    .color-swatch {
+        border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+    
+    .spacing-demo {
+        background-color: var(--primary-color);
+        border-radius: var(--radius-sm);
+    }
+    
+    .radius-demo {
+        width: 80px;
+        height: 80px;
+        background-color: var(--primary-color);
+    }
+    
+    .shadow-demo {
+        width: 100px;
+        height: 100px;
+        background-color: var(--card-bg);
+        border-radius: var(--radius-md);
+    }
+</style>
+{% endblock %} 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="4" time="0.016" timestamp="2025-03-21T17:18:57.473246+01:00" hostname="MacBook-Pro.local"><testcase classname="test_social_media" name="test_platform_specifications" time="0.000"><failure message="AttributeError: 'CrossPlatformPublisher' object has no attribute '_get_video_info'">def test_platform_specifications():
+        """Test that platform specifications are correctly defined."""
+        print("\n=== Testing Platform Specifications ===")
+    
+        for platform in Platform:
+&gt;           specs = CrossPlatformPublisher()._get_video_info("")
+E           AttributeError: 'CrossPlatformPublisher' object has no attribute '_get_video_info'
+
+test_social_media.py:29: AttributeError</failure></testcase><testcase classname="test_social_media" name="test_metadata_formatting" time="0.000"><failure message="AttributeError: 'CrossPlatformPublisher' object has no attribute 'format_metadata_for_platform'">def test_metadata_formatting():
+        """Test that metadata is correctly formatted for different platforms."""
+        print("\n=== Testing Metadata Formatting ===")
+    
+        publisher = get_cross_platform_publisher()
+    
+        # Original metadata
+        metadata = {
+            "title": "Test Video",
+            "description": "This is a test video description that is intentionally long enough to test the length limitations of different platforms. We want to ensure that the description is properly truncated and formatted according to each platform's specific requirements.",
+            "hashtags": ["test", "video", "shorts", "youtube", "tiktok", "instagram", "facebook", "reels", "viral", "trending"]
+        }
+    
+        for platform in Platform:
+            print(f"\n{platform.name} metadata formatting:")
+&gt;           formatted = publisher.format_metadata_for_platform(metadata, platform)
+E           AttributeError: 'CrossPlatformPublisher' object has no attribute 'format_metadata_for_platform'
+
+test_social_media.py:54: AttributeError</failure></testcase><testcase classname="test_social_media" name="test_multi_platform_publishing" time="0.000"><failure message="TypeError: publish_video() takes from 2 to 3 positional arguments but 4 were given">def test_multi_platform_publishing():
+        """Test publishing a video to multiple platforms."""
+        print("\n=== Testing Multi-Platform Publishing ===")
+    
+        publisher = get_cross_platform_publisher()
+    
+        # Mock video path (would be a real path in a real test)
+        video_path = "test_video.mp4"
+    
+        # Video metadata
+        metadata = {
+            "title": "Multi-Platform Test",
+            "description": "Testing publishing to multiple platforms at once",
+            "hashtags": ["test", "multiplatform", "integration"]
+        }
+    
+        # Publish to all platforms
+        platforms = [Platform.TIKTOK, Platform.INSTAGRAM, Platform.FACEBOOK]
+    
+        print(f"Publishing to {len(platforms)} platforms: {', '.join([p.name for p in platforms])}")
+    
+&gt;       results = publisher.publish_video(video_path, metadata, platforms)
+E       TypeError: publish_video() takes from 2 to 3 positional arguments but 4 were given
+
+test_social_media.py:91: TypeError</failure></testcase><testcase classname="test_social_media" name="test_cross_platform_analytics" time="0.000"><failure message="AttributeError: 'CrossPlatformPublisher' object has no attribute 'get_platform_analytics'">def test_cross_platform_analytics():
+        """Test retrieving and aggregating analytics across platforms."""
+        print("\n=== Testing Cross-Platform Analytics ===")
+    
+        publisher = get_cross_platform_publisher()
+    
+        # Mock video IDs for each platform
+        video_ids = {
+            Platform.TIKTOK: "tt_12345",
+            Platform.INSTAGRAM: "ig_67890",
+            Platform.FACEBOOK: "fb_54321"
+        }
+    
+        print(f"Getting analytics for {len(video_ids)} videos across platforms")
+    
+        # Get analytics for each platform individually
+        for platform, video_id in video_ids.items():
+            print(f"\n{platform.name} individual analytics:")
+    
+&gt;           analytics = publisher.get_platform_analytics(platform, video_id)
+E           AttributeError: 'CrossPlatformPublisher' object has no attribute 'get_platform_analytics'
+
+test_social_media.py:137: AttributeError</failure></testcase></testsuite></testsuites>

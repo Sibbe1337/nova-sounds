@@ -1,0 +1,729 @@
+{% extends "base.html" %}
+
+{% block title %}SEO Metadata Generator | Nova Sounds Shorts Machine{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="section-title mb-4">SEO Metadata Generator</h2>
+            <p class="lead">Generate optimized titles, descriptions, and hashtags for your shorts using AI</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5>Video Metadata</h5>
+                    <span class="badge bg-primary ai-badge">
+                        <i class="fas fa-robot me-1"></i> AI-Powered
+                    </span>
+                </div>
+                <div class="card-body">
+                    <!-- Content context section -->
+                    <div class="content-context mb-4">
+                        <h6>Content Context</h6>
+                        <p class="text-muted small">This information helps the AI understand your content to generate better metadata</p>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-music"></i></span>
+                                    <select id="musicTrackInput" class="form-select">
+                                        <option value="">Select music track...</option>
+                                        {% for track in music_tracks %}
+                                        <option value="{{ track.id }}">{{ track.title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-text">Music track used in your video</div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-film"></i></span>
+                                    <select id="videoStyleInput" class="form-select">
+                                        <option value="">Select video style...</option>
+                                        <option value="vlog">Vlog</option>
+                                        <option value="chill">Chill</option>
+                                        <option value="cinematic">Cinematic</option>
+                                        <option value="hype">Hype</option>
+                                    </select>
+                                </div>
+                                <div class="form-text">Style of your video</div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                                    <input type="text" id="keywordsInput" class="form-control" placeholder="Enter keywords related to your content">
+                                </div>
+                                <div class="form-text">Keywords related to your video content (comma separated)</div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-align-left"></i></span>
+                                    <textarea id="contentDescriptionInput" class="form-control" rows="3" placeholder="Briefly describe what's in your video..."></textarea>
+                                </div>
+                                <div class="form-text">Brief description of what appears in your video</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Target audience section -->
+                    <div class="target-audience mb-4">
+                        <h6>Target Audience & Platform</h6>
+                        <p class="text-muted small">Optimize metadata for specific platforms and audiences</p>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-users"></i></span>
+                                    <select id="targetAudienceInput" class="form-select">
+                                        <option value="general">General</option>
+                                        <option value="teens">Teens</option>
+                                        <option value="young_adults">Young Adults</option>
+                                        <option value="adults">Adults</option>
+                                        <option value="professionals">Professionals</option>
+                                    </select>
+                                </div>
+                                <div class="form-text">Your target audience</div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-share-alt"></i></span>
+                                    <select id="platformInput" class="form-select">
+                                        <option value="youtube">YouTube Shorts</option>
+                                        <option value="tiktok">TikTok</option>
+                                        <option value="instagram">Instagram Reels</option>
+                                    </select>
+                                </div>
+                                <div class="form-text">Platform where you'll publish</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Generate button -->
+                    <div class="text-center mb-4">
+                        <button id="generateBtn" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-magic me-2"></i> Generate with AI
+                        </button>
+                        <div class="form-text mt-2">Uses OpenAI to generate optimized metadata</div>
+                    </div>
+                    
+                    <!-- Loading indicator (hidden by default) -->
+                    <div id="loadingIndicator" class="text-center my-4" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Generating metadata...</p>
+                    </div>
+                    
+                    <!-- Results section (hidden by default) -->
+                    <div id="resultsContainer" class="results-container mt-4" style="display: none;">
+                        <h6 class="border-bottom pb-2 mb-3">Generated Metadata</h6>
+                        
+                        <!-- Title options -->
+                        <div class="mb-4">
+                            <label class="form-label d-flex justify-content-between">
+                                <span>Title Options</span>
+                                <small class="text-muted">Select the best one</small>
+                            </label>
+                            
+                            <div id="titleOptions" class="option-cards">
+                                <!-- Title options will be inserted here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <label for="generatedDescription" class="form-label d-flex justify-content-between">
+                                <span>Description</span>
+                                <div>
+                                    <small class="text-muted me-2">Character count: <span id="descriptionCharCount">0</span></small>
+                                    <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="generatedDescription">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </label>
+                            <textarea id="generatedDescription" class="form-control" rows="4"></textarea>
+                        </div>
+                        
+                        <!-- Hashtags -->
+                        <div class="mb-4">
+                            <label for="generatedHashtags" class="form-label d-flex justify-content-between">
+                                <span>Hashtags</span>
+                                <div>
+                                    <small class="text-muted me-2">Count: <span id="hashtagCount">0</span></small>
+                                    <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="generatedHashtags">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </label>
+                            <textarea id="generatedHashtags" class="form-control" rows="2"></textarea>
+                        </div>
+                        
+                        <!-- SEO Performance score -->
+                        <div class="seo-performance mb-4">
+                            <h6>Estimated SEO Performance</h6>
+                            <div class="d-flex align-items-center">
+                                <div class="progress flex-grow-1 me-2" style="height: 8px;">
+                                    <div id="seoScoreBar" class="progress-bar bg-success" 
+                                         role="progressbar" style="width: 85%;" 
+                                         aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="seo-score-value">
+                                    <span id="seoScoreValue">85</span><small>/100</small>
+                                </div>
+                            </div>
+                            <div class="seo-tips mt-2">
+                                <small id="seoTips" class="text-muted">These metadata options are optimized for discovery and engagement.</small>
+                            </div>
+                        </div>
+                        
+                        <!-- Action buttons -->
+                        <div class="d-flex justify-content-between">
+                            <button id="regenerateBtn" class="btn btn-outline-primary">
+                                <i class="fas fa-redo me-1"></i> Regenerate
+                            </button>
+                            <button id="saveMetadataBtn" class="btn btn-success">
+                                <i class="fas fa-save me-1"></i> Save Metadata
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Metadata Saved</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Your metadata has been saved and will be applied to your video.</p>
+                <div class="metadata-summary">
+                    <div class="mb-2">
+                        <strong>Title:</strong> <span id="summaryTitle"></span>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Description:</strong> <span id="summaryDescription"></span>
+                    </div>
+                    <div>
+                        <strong>Hashtags:</strong> <span id="summaryHashtags"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    /* SEO Metadata Generator specific styles */
+    .ai-badge {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .option-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .option-card {
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .option-card:hover {
+        border-color: #adb5bd;
+        background-color: #f8f9fa;
+    }
+    
+    .option-card.selected {
+        border-color: #0d6efd;
+        background-color: rgba(13, 110, 253, 0.05);
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+    }
+    
+    .option-card .option-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.5rem;
+    }
+    
+    .copy-btn {
+        padding: 0.15rem 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .seo-score-value {
+        font-weight: bold;
+        font-size: 1.25rem;
+        width: 55px;
+        text-align: right;
+    }
+    
+    .seo-score-value small {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+    
+    .metadata-summary {
+        background-color: #f8f9fa;
+        border-radius: 0.25rem;
+        padding: 1rem;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    
+    #summaryDescription, #summaryHashtags {
+        display: block;
+        margin-top: 0.25rem;
+        font-weight: normal;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Elements
+    const generateBtn = document.getElementById('generateBtn');
+    const regenerateBtn = document.getElementById('regenerateBtn');
+    const saveMetadataBtn = document.getElementById('saveMetadataBtn');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const titleOptions = document.getElementById('titleOptions');
+    const generatedDescription = document.getElementById('generatedDescription');
+    const generatedHashtags = document.getElementById('generatedHashtags');
+    const descriptionCharCount = document.getElementById('descriptionCharCount');
+    const hashtagCount = document.getElementById('hashtagCount');
+    const seoScoreBar = document.getElementById('seoScoreBar');
+    const seoScoreValue = document.getElementById('seoScoreValue');
+    const seoTips = document.getElementById('seoTips');
+    
+    // Input elements
+    const musicTrackInput = document.getElementById('musicTrackInput');
+    const videoStyleInput = document.getElementById('videoStyleInput');
+    const keywordsInput = document.getElementById('keywordsInput');
+    const contentDescriptionInput = document.getElementById('contentDescriptionInput');
+    const targetAudienceInput = document.getElementById('targetAudienceInput');
+    const platformInput = document.getElementById('platformInput');
+    
+    // Modal elements
+    const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+    const summaryTitle = document.getElementById('summaryTitle');
+    const summaryDescription = document.getElementById('summaryDescription');
+    const summaryHashtags = document.getElementById('summaryHashtags');
+    
+    // Variables
+    let selectedTitleIndex = -1;
+    let currentMetadata = null;
+    
+    // Initialize
+    function init() {
+        // Set up event listeners
+        generateBtn.addEventListener('click', generateMetadata);
+        regenerateBtn.addEventListener('click', generateMetadata);
+        saveMetadataBtn.addEventListener('click', saveMetadata);
+        
+        // Description character counter
+        generatedDescription.addEventListener('input', updateDescriptionCounter);
+        
+        // Hashtag counter
+        generatedHashtags.addEventListener('input', updateHashtagCounter);
+        
+        // Set up copy buttons
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', copyToClipboard);
+        });
+        
+        // Restore values from session storage if available
+        restoreInputValues();
+    }
+    
+    // Function to collect input values
+    function collectInputValues() {
+        const values = {
+            musicTrack: {
+                id: musicTrackInput.value,
+                name: musicTrackInput.options[musicTrackInput.selectedIndex]?.text || ''
+            },
+            videoStyle: videoStyleInput.value,
+            keywords: keywordsInput.value,
+            contentDescription: contentDescriptionInput.value,
+            targetAudience: targetAudienceInput.value,
+            platform: platformInput.value
+        };
+        
+        // Save to session storage
+        sessionStorage.setItem('seoMusicTrack', values.musicTrack.id);
+        sessionStorage.setItem('seoVideoStyle', values.videoStyle);
+        sessionStorage.setItem('seoKeywords', values.keywords);
+        sessionStorage.setItem('seoContentDescription', values.contentDescription);
+        sessionStorage.setItem('seoTargetAudience', values.targetAudience);
+        sessionStorage.setItem('seoPlatform', values.platform);
+        
+        return values;
+    }
+    
+    // Function to restore input values from session storage
+    function restoreInputValues() {
+        musicTrackInput.value = sessionStorage.getItem('seoMusicTrack') || '';
+        videoStyleInput.value = sessionStorage.getItem('seoVideoStyle') || '';
+        keywordsInput.value = sessionStorage.getItem('seoKeywords') || '';
+        contentDescriptionInput.value = sessionStorage.getItem('seoContentDescription') || '';
+        targetAudienceInput.value = sessionStorage.getItem('seoTargetAudience') || 'general';
+        platformInput.value = sessionStorage.getItem('seoPlatform') || 'youtube';
+    }
+    
+    // Function to generate metadata using OpenAI
+    function generateMetadata() {
+        // Show loading, hide results
+        loadingIndicator.style.display = 'block';
+        resultsContainer.style.display = 'none';
+        
+        // Disable generate button
+        generateBtn.disabled = true;
+        regenerateBtn.disabled = true;
+        
+        // Collect input values
+        const inputData = collectInputValues();
+        
+        // Call OpenAI endpoint
+        fetch('/api/metadata/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(inputData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Server returned ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Store the metadata results
+            currentMetadata = data;
+            
+            // Display results
+            displayMetadataResults(data);
+        })
+        .catch(error => {
+            console.error('Error generating metadata:', error);
+            showError('Failed to generate metadata. Please try again.');
+        })
+        .finally(() => {
+            // Hide loading indicator
+            loadingIndicator.style.display = 'none';
+            
+            // Re-enable generate button
+            generateBtn.disabled = false;
+            regenerateBtn.disabled = false;
+        });
+    }
+    
+    // Function to display generated metadata
+    function displayMetadataResults(data) {
+        // Clear previous title options
+        titleOptions.innerHTML = '';
+        
+        // Add title options
+        data.titles.forEach((title, index) => {
+            const titleCard = document.createElement('div');
+            titleCard.className = 'option-card';
+            titleCard.dataset.index = index;
+            titleCard.innerHTML = `
+                <div class="option-content">${title}</div>
+                <div class="option-actions">
+                    <small class="text-muted">Option ${index + 1}</small>
+                    <button class="btn btn-sm btn-outline-secondary copy-title-btn" data-title="${title}">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            `;
+            
+            // Add click handler to select this title
+            titleCard.addEventListener('click', function() {
+                selectTitleOption(index);
+            });
+            
+            // Add copy button handler
+            const copyBtn = titleCard.querySelector('.copy-title-btn');
+            copyBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent card selection
+                navigator.clipboard.writeText(title)
+                    .then(() => showToast('Title copied to clipboard'))
+                    .catch(err => console.error('Failed to copy:', err));
+            });
+            
+            titleOptions.appendChild(titleCard);
+        });
+        
+        // Set description and hashtags
+        generatedDescription.value = data.description;
+        generatedHashtags.value = data.hashtags.join(' ');
+        
+        // Update counters
+        updateDescriptionCounter();
+        updateHashtagCounter();
+        
+        // Set SEO score
+        setSeoScore(data.seo_score || 85);
+        
+        // Update SEO tips
+        if (data.seo_tips) {
+            seoTips.textContent = data.seo_tips;
+        }
+        
+        // Show results container
+        resultsContainer.style.display = 'block';
+        
+        // Select first title by default
+        if (data.titles.length > 0) {
+            selectTitleOption(0);
+        }
+    }
+    
+    // Function to select a title option
+    function selectTitleOption(index) {
+        selectedTitleIndex = index;
+        
+        // Update UI
+        document.querySelectorAll('.option-card').forEach((card, i) => {
+            if (i === index) {
+                card.classList.add('selected');
+            } else {
+                card.classList.remove('selected');
+            }
+        });
+    }
+    
+    // Function to update the description character counter
+    function updateDescriptionCounter() {
+        const charCount = generatedDescription.value.length;
+        descriptionCharCount.textContent = charCount;
+        
+        // Change color based on length
+        if (charCount > 4000) {
+            descriptionCharCount.classList.add('text-danger');
+        } else if (charCount > 3000) {
+            descriptionCharCount.classList.add('text-warning');
+            descriptionCharCount.classList.remove('text-danger');
+        } else {
+            descriptionCharCount.classList.remove('text-warning', 'text-danger');
+        }
+    }
+    
+    // Function to update the hashtag counter
+    function updateHashtagCounter() {
+        const hashtagArray = generatedHashtags.value.match(/#[^\s#]+/g) || [];
+        const count = hashtagArray.length;
+        hashtagCount.textContent = count;
+        
+        // Change color based on count
+        if (count > 30) {
+            hashtagCount.classList.add('text-danger');
+        } else if (count > 20) {
+            hashtagCount.classList.add('text-warning');
+            hashtagCount.classList.remove('text-danger');
+        } else {
+            hashtagCount.classList.remove('text-warning', 'text-danger');
+        }
+    }
+    
+    // Function to set the SEO score
+    function setSeoScore(score) {
+        seoScoreValue.textContent = score;
+        seoScoreBar.style.width = `${score}%`;
+        seoScoreBar.setAttribute('aria-valuenow', score);
+        
+        // Set color based on score
+        seoScoreBar.classList.remove('bg-success', 'bg-warning', 'bg-danger');
+        if (score >= 80) {
+            seoScoreBar.classList.add('bg-success');
+        } else if (score >= 50) {
+            seoScoreBar.classList.add('bg-warning');
+        } else {
+            seoScoreBar.classList.add('bg-danger');
+        }
+    }
+    
+    // Function to save the metadata
+    function saveMetadata() {
+        if (!currentMetadata || selectedTitleIndex === -1) {
+            showToast('Please generate metadata first', 'warning');
+            return;
+        }
+        
+        const selectedTitle = currentMetadata.titles[selectedTitleIndex];
+        const description = generatedDescription.value;
+        const hashtags = generatedHashtags.value;
+        
+        // Prepare data to save
+        const metadataToSave = {
+            title: selectedTitle,
+            description: description,
+            hashtags: hashtags
+        };
+        
+        // Save to session storage
+        sessionStorage.setItem('videoTitle', selectedTitle);
+        sessionStorage.setItem('videoDescription', description);
+        sessionStorage.setItem('videoHashtags', hashtags);
+        
+        // Send to server
+        fetch('/api/metadata/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(metadataToSave)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Server returned ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Show confirmation modal
+            showSaveConfirmation(metadataToSave);
+        })
+        .catch(error => {
+            console.error('Error saving metadata:', error);
+            
+            // Even if server save fails, we still have it in session storage
+            showToast('Metadata saved locally', 'success');
+        });
+    }
+    
+    // Function to show save confirmation
+    function showSaveConfirmation(metadata) {
+        // Set modal content
+        summaryTitle.textContent = metadata.title;
+        summaryDescription.textContent = trimText(metadata.description, 100);
+        summaryHashtags.textContent = trimText(metadata.hashtags, 100);
+        
+        // Show modal
+        confirmationModal.show();
+    }
+    
+    // Function to copy text to clipboard
+    function copyToClipboard(e) {
+        const targetId = e.currentTarget.dataset.target;
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+            targetElement.select();
+            navigator.clipboard.writeText(targetElement.value)
+                .then(() => {
+                    showToast('Copied to clipboard');
+                })
+                .catch(err => {
+                    console.error('Failed to copy:', err);
+                    showToast('Failed to copy to clipboard', 'error');
+                });
+        }
+    }
+    
+    // Function to show a toast notification
+    function showToast(message, type = 'info') {
+        // Create toast element if it doesn't exist
+        let toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.id = 'toast-container';
+            toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+            document.body.appendChild(toastContainer);
+        }
+        
+        // Set toast class based on type
+        let bgClass = 'bg-primary text-white';
+        if (type === 'success') bgClass = 'bg-success text-white';
+        if (type === 'warning') bgClass = 'bg-warning text-dark';
+        if (type === 'error') bgClass = 'bg-danger text-white';
+        
+        // Create new toast
+        const toastId = 'toast-' + Date.now();
+        const toastHtml = `
+            <div id="${toastId}" class="toast ${bgClass}" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <strong class="me-auto">Nova Sounds</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    ${message}
+                </div>
+            </div>
+        `;
+        
+        toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+        
+        // Initialize and show the toast
+        const toastElement = document.getElementById(toastId);
+        const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+        toast.show();
+        
+        // Remove toast after it's hidden
+        toastElement.addEventListener('hidden.bs.toast', function() {
+            toastElement.remove();
+        });
+    }
+    
+    // Function to show error message
+    function showError(message) {
+        // Create error alert
+        const errorAlert = document.createElement('div');
+        errorAlert.className = 'alert alert-danger alert-dismissible fade show';
+        errorAlert.innerHTML = `
+            <i class="fas fa-exclamation-circle me-2"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        
+        // Add to results container
+        resultsContainer.style.display = 'block';
+        resultsContainer.prepend(errorAlert);
+        
+        // Auto dismiss after 5 seconds
+        setTimeout(() => {
+            const bsAlert = new bootstrap.Alert(errorAlert);
+            bsAlert.close();
+        }, 5000);
+    }
+    
+    // Helper function to trim text to a specified length
+    function trimText(text, maxLength) {
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    }
+    
+    // Initialize the component
+    init();
+});
+</script>
+{% endblock %} 

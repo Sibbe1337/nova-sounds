@@ -1,0 +1,399 @@
+{% extends "ui_docs/index.html" %}
+
+{% block title %}UI Docs - Buttons{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card mb-4 position-sticky" style="top: 1rem;">
+                <div class="card-header">
+                    <h3 class="card-title h5 mb-0">Documentation</h3>
+                </div>
+                <div class="card-body p-0">
+                    <nav class="nav flex-column">
+                        <a href="/ui-docs" class="nav-link{% if not component %} active{% endif %}">Overview</a>
+                        <a href="/ui-docs/guidelines" class="nav-link{% if request.url.path == '/ui-docs/guidelines' %} active{% endif %}">Design Guidelines</a>
+                        <a href="/ui-docs/theme" class="nav-link{% if request.url.path == '/ui-docs/theme' %} active{% endif %}">Theme & Variables</a>
+                        
+                        <div class="nav-divider my-2"></div>
+                        <div class="nav-header px-3 py-2 text-muted small fw-bold">Components</div>
+                        
+                        <a href="/ui-docs/components/buttons" class="nav-link{% if component == 'buttons' %} active{% endif %}">Buttons</a>
+                        <a href="/ui-docs/components/cards" class="nav-link{% if component == 'cards' %} active{% endif %}">Cards</a>
+                        <a href="/ui-docs/components/forms" class="nav-link{% if component == 'forms' %} active{% endif %}">Forms</a>
+                        <a href="/ui-docs/components/notifications" class="nav-link{% if component == 'notifications' %} active{% endif %}">Notifications</a>
+                        <a href="/ui-docs/components/loaders" class="nav-link{% if component == 'loaders' %} active{% endif %}">Loaders</a>
+                        <a href="/ui-docs/components/typography" class="nav-link{% if component == 'typography' %} active{% endif %}">Typography</a>
+                        <a href="/ui-docs/components/layout" class="nav-link{% if component == 'layout' %} active{% endif %}">Layout</a>
+                        <a href="/ui-docs/components/state" class="nav-link{% if component == 'state' %} active{% endif %}">UI States</a>
+                        <a href="/ui-docs/components/accessibility" class="nav-link{% if component == 'accessibility' %} active{% endif %}">Accessibility</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h1 class="mb-0 h3">Buttons</h1>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-primary" id="toggleThemeBtn" data-theme-toggle>
+                            <i class="fas fa-moon dark-only"></i>
+                            <i class="fas fa-sun light-only"></i>
+                            Toggle Theme
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Buttons provide users with clickable elements that perform actions and navigate between pages. Our button styles match the application's design language and provide clear interactivity cues.</p>
+                    
+                    <!-- Button Types -->
+                    <section class="mb-5">
+                        <h2>Button Types</h2>
+                        <p>Use the appropriate button type based on the action's importance and context.</p>
+                        
+                        <div class="example-container p-4 border rounded mb-3">
+                            <button class="btn btn-primary me-2 mb-2">Primary</button>
+                            <button class="btn btn-secondary me-2 mb-2">Secondary</button>
+                            <button class="btn btn-success me-2 mb-2">Success</button>
+                            <button class="btn btn-danger me-2 mb-2">Danger</button>
+                            <button class="btn btn-warning me-2 mb-2">Warning</button>
+                            <button class="btn btn-info me-2 mb-2">Info</button>
+                            <button class="btn btn-light me-2 mb-2">Light</button>
+                            <button class="btn btn-dark me-2 mb-2">Dark</button>
+                        </div>
+                        
+                        <div class="code-block mb-3">
+                            <div class="code-block-header d-flex justify-content-between p-2 bg-light border">
+                                <span>HTML</span>
+                                <button class="copy-btn btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre class="language-html m-0"><code>&lt;button class="btn btn-primary"&gt;Primary&lt;/button&gt;
+&lt;button class="btn btn-secondary"&gt;Secondary&lt;/button&gt;
+&lt;button class="btn btn-success"&gt;Success&lt;/button&gt;
+&lt;button class="btn btn-danger"&gt;Danger&lt;/button&gt;
+&lt;button class="btn btn-warning"&gt;Warning&lt;/button&gt;
+&lt;button class="btn btn-info"&gt;Info&lt;/button&gt;
+&lt;button class="btn btn-light"&gt;Light&lt;/button&gt;
+&lt;button class="btn btn-dark"&gt;Dark&lt;/button&gt;</code></pre>
+                        </div>
+                    </section>
+                    
+                    <!-- Outline Buttons -->
+                    <section class="mb-5">
+                        <h2>Outline Buttons</h2>
+                        <p>Outline buttons are less emphasized and work well for secondary actions.</p>
+                        
+                        <div class="example-container p-4 border rounded mb-3">
+                            <button class="btn btn-outline-primary me-2 mb-2">Primary</button>
+                            <button class="btn btn-outline-secondary me-2 mb-2">Secondary</button>
+                            <button class="btn btn-outline-success me-2 mb-2">Success</button>
+                            <button class="btn btn-outline-danger me-2 mb-2">Danger</button>
+                            <button class="btn btn-outline-warning me-2 mb-2">Warning</button>
+                            <button class="btn btn-outline-info me-2 mb-2">Info</button>
+                            <button class="btn btn-outline-light me-2 mb-2">Light</button>
+                            <button class="btn btn-outline-dark me-2 mb-2">Dark</button>
+                        </div>
+                        
+                        <div class="code-block mb-3">
+                            <div class="code-block-header d-flex justify-content-between p-2 bg-light border">
+                                <span>HTML</span>
+                                <button class="copy-btn btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre class="language-html m-0"><code>&lt;button class="btn btn-outline-primary"&gt;Primary&lt;/button&gt;
+&lt;button class="btn btn-outline-secondary"&gt;Secondary&lt;/button&gt;
+&lt;button class="btn btn-outline-success"&gt;Success&lt;/button&gt;
+&lt;button class="btn btn-outline-danger"&gt;Danger&lt;/button&gt;
+&lt;button class="btn btn-outline-warning"&gt;Warning&lt;/button&gt;
+&lt;button class="btn btn-outline-info"&gt;Info&lt;/button&gt;
+&lt;button class="btn btn-outline-light"&gt;Light&lt;/button&gt;
+&lt;button class="btn btn-outline-dark"&gt;Dark&lt;/button&gt;</code></pre>
+                        </div>
+                    </section>
+                    
+                    <!-- Button Sizes -->
+                    <section class="mb-5">
+                        <h2>Button Sizes</h2>
+                        <p>Adjust button size based on its importance and available space.</p>
+                        
+                        <div class="example-container p-4 border rounded mb-3">
+                            <button class="btn btn-primary btn-lg me-2 mb-2">Large Button</button>
+                            <button class="btn btn-primary me-2 mb-2">Default Button</button>
+                            <button class="btn btn-primary btn-sm me-2 mb-2">Small Button</button>
+                        </div>
+                        
+                        <div class="code-block mb-3">
+                            <div class="code-block-header d-flex justify-content-between p-2 bg-light border">
+                                <span>HTML</span>
+                                <button class="copy-btn btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre class="language-html m-0"><code>&lt;button class="btn btn-primary btn-lg"&gt;Large Button&lt;/button&gt;
+&lt;button class="btn btn-primary"&gt;Default Button&lt;/button&gt;
+&lt;button class="btn btn-primary btn-sm"&gt;Small Button&lt;/button&gt;</code></pre>
+                        </div>
+                    </section>
+                    
+                    <!-- Button States -->
+                    <section class="mb-5">
+                        <h2>Button States</h2>
+                        <p>Buttons have different states to indicate their interactivity.</p>
+                        
+                        <div class="example-container p-4 border rounded mb-3">
+                            <button class="btn btn-primary me-2 mb-2">Default State</button>
+                            <button class="btn btn-primary active me-2 mb-2">Active State</button>
+                            <button class="btn btn-primary disabled me-2 mb-2" aria-disabled="true">Disabled State</button>
+                            <button class="btn btn-primary loading me-2 mb-2">
+                                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                                Loading...
+                            </button>
+                        </div>
+                        
+                        <div class="code-block mb-3">
+                            <div class="code-block-header d-flex justify-content-between p-2 bg-light border">
+                                <span>HTML</span>
+                                <button class="copy-btn btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre class="language-html m-0"><code>&lt;button class="btn btn-primary"&gt;Default State&lt;/button&gt;
+&lt;button class="btn btn-primary active"&gt;Active State&lt;/button&gt;
+&lt;button class="btn btn-primary disabled" aria-disabled="true"&gt;Disabled State&lt;/button&gt;
+&lt;button class="btn btn-primary loading"&gt;
+    &lt;span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"&gt;&lt;/span&gt;
+    Loading...
+&lt;/button&gt;</code></pre>
+                        </div>
+                    </section>
+                    
+                    <!-- Button with Icons -->
+                    <section class="mb-5">
+                        <h2>Buttons with Icons</h2>
+                        <p>Icons enhance button clarity and provide visual cues.</p>
+                        
+                        <div class="example-container p-4 border rounded mb-3">
+                            <button class="btn btn-primary me-2 mb-2">
+                                <i class="fas fa-save me-1"></i> Save
+                            </button>
+                            <button class="btn btn-success me-2 mb-2">
+                                <i class="fas fa-check me-1"></i> Confirm
+                            </button>
+                            <button class="btn btn-danger me-2 mb-2">
+                                <i class="fas fa-trash me-1"></i> Delete
+                            </button>
+                            <button class="btn btn-info me-2 mb-2">
+                                Add <i class="fas fa-plus ms-1"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="code-block mb-3">
+                            <div class="code-block-header d-flex justify-content-between p-2 bg-light border">
+                                <span>HTML</span>
+                                <button class="copy-btn btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre class="language-html m-0"><code>&lt;button class="btn btn-primary"&gt;
+    &lt;i class="fas fa-save me-1"&gt;&lt;/i&gt; Save
+&lt;/button&gt;
+&lt;button class="btn btn-success"&gt;
+    &lt;i class="fas fa-check me-1"&gt;&lt;/i&gt; Confirm
+&lt;/button&gt;
+&lt;button class="btn btn-danger"&gt;
+    &lt;i class="fas fa-trash me-1"&gt;&lt;/i&gt; Delete
+&lt;/button&gt;
+&lt;button class="btn btn-info"&gt;
+    Add &lt;i class="fas fa-plus ms-1"&gt;&lt;/i&gt;
+&lt;/button&gt;</code></pre>
+                        </div>
+                    </section>
+                    
+                    <!-- Icon-only Buttons -->
+                    <section class="mb-5">
+                        <h2>Icon-only Buttons</h2>
+                        <p>Use icon-only buttons for actions that are universally understood from the icon alone.</p>
+                        
+                        <div class="example-container p-4 border rounded mb-3">
+                            <button class="btn btn-primary btn-icon me-2 mb-2" aria-label="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-icon me-2 mb-2" aria-label="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="btn btn-success btn-icon me-2 mb-2" aria-label="Add">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="btn btn-secondary btn-icon me-2 mb-2" aria-label="Search">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="code-block mb-3">
+                            <div class="code-block-header d-flex justify-content-between p-2 bg-light border">
+                                <span>HTML</span>
+                                <button class="copy-btn btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre class="language-html m-0"><code>&lt;button class="btn btn-primary btn-icon" aria-label="Edit"&gt;
+    &lt;i class="fas fa-edit"&gt;&lt;/i&gt;
+&lt;/button&gt;
+&lt;button class="btn btn-danger btn-icon" aria-label="Delete"&gt;
+    &lt;i class="fas fa-trash"&gt;&lt;/i&gt;
+&lt;/button&gt;
+&lt;button class="btn btn-success btn-icon" aria-label="Add"&gt;
+    &lt;i class="fas fa-plus"&gt;&lt;/i&gt;
+&lt;/button&gt;
+&lt;button class="btn btn-secondary btn-icon" aria-label="Search"&gt;
+    &lt;i class="fas fa-search"&gt;&lt;/i&gt;
+&lt;/button&gt;</code></pre>
+                        </div>
+                    </section>
+                    
+                    <!-- Button Groups -->
+                    <section class="mb-5">
+                        <h2>Button Groups</h2>
+                        <p>Group related buttons together for a unified appearance.</p>
+                        
+                        <div class="example-container p-4 border rounded mb-3">
+                            <div class="btn-group mb-3" role="group" aria-label="Basic example">
+                                <button class="btn btn-primary">Left</button>
+                                <button class="btn btn-primary">Middle</button>
+                                <button class="btn btn-primary">Right</button>
+                            </div>
+                            <div class="d-block mb-3"></div>
+                            <div class="btn-group mb-3" role="group" aria-label="Outline button group">
+                                <button class="btn btn-outline-secondary">Day</button>
+                                <button class="btn btn-outline-secondary active">Week</button>
+                                <button class="btn btn-outline-secondary">Month</button>
+                            </div>
+                        </div>
+                        
+                        <div class="code-block mb-3">
+                            <div class="code-block-header d-flex justify-content-between p-2 bg-light border">
+                                <span>HTML</span>
+                                <button class="copy-btn btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre class="language-html m-0"><code>&lt;div class="btn-group" role="group" aria-label="Basic example"&gt;
+    &lt;button class="btn btn-primary"&gt;Left&lt;/button&gt;
+    &lt;button class="btn btn-primary"&gt;Middle&lt;/button&gt;
+    &lt;button class="btn btn-primary"&gt;Right&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div class="btn-group" role="group" aria-label="Outline button group"&gt;
+    &lt;button class="btn btn-outline-secondary"&gt;Day&lt;/button&gt;
+    &lt;button class="btn btn-outline-secondary active"&gt;Week&lt;/button&gt;
+    &lt;button class="btn btn-outline-secondary"&gt;Month&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </section>
+                    
+                    <!-- Accessibility Guidelines -->
+                    <section class="mb-5">
+                        <h2>Accessibility Guidelines</h2>
+                        <ul class="list-group mb-4">
+                            <li class="list-group-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Always add <code>aria-label</code> to icon-only buttons
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Use <code>aria-disabled="true"</code> for disabled buttons
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Add <code>role="group"</code> and <code>aria-label</code> to button groups
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Ensure sufficient color contrast (4.5:1 ratio) for text
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Use distinct focus styles for keyboard navigation
+                            </li>
+                        </ul>
+                    </section>
+                    
+                    <!-- Best Practices -->
+                    <section class="mb-5">
+                        <h2>Best Practices</h2>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100 border-success">
+                                    <div class="card-header bg-success text-white">
+                                        <h3 class="h5 mb-0">Do</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="mb-2">
+                                                <i class="fas fa-check text-success me-2"></i>
+                                                Use primary buttons for the main action
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="fas fa-check text-success me-2"></i>
+                                                Keep button text concise (1-3 words)
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="fas fa-check text-success me-2"></i>
+                                                Use verb-based labels (e.g., "Save" not "Submit")
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="fas fa-check text-success me-2"></i>
+                                                Add loading states for asynchronous actions
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-check text-success me-2"></i>
+                                                Maintain consistent button sizing within a UI
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100 border-danger">
+                                    <div class="card-header bg-danger text-white">
+                                        <h3 class="h5 mb-0">Don't</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="mb-2">
+                                                <i class="fas fa-times text-danger me-2"></i>
+                                                Use too many primary buttons on one page
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="fas fa-times text-danger me-2"></i>
+                                                Use generic labels like "Click Here"
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="fas fa-times text-danger me-2"></i>
+                                                Mix button styles inconsistently
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="fas fa-times text-danger me-2"></i>
+                                                Place buttons where they can be accidentally clicked
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-times text-danger me-2"></i>
+                                                Use low-contrast colors for button text
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

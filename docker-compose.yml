@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    command: uvicorn src.app.api.main:app --host 0.0.0.0 --port 8000 --reload
+
+  ui:
+    build: .
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - api
+    command: uvicorn src.ui.main:app --host 0.0.0.0 --port 8001 --reload
+    environment:
+      - API_URL=http://api:8000
+
+  worker:
+    build: .
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    command: celery -A src.app.tasks.config worker --loglevel=info
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379" 

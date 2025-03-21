@@ -1,0 +1,264 @@
+/* 
+ * Custom Video Player Styles
+ * A modern, accessible video player with custom controls
+ */
+
+.video-player {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: #000;
+  box-shadow: var(--shadow-md);
+  margin: var(--spacing-md) 0;
+  aspect-ratio: 9/16; /* Default for a vertical short */
+  transition: all var(--transition-normal);
+}
+
+.video-player:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  cursor: pointer;
+}
+
+/* Custom Controls */
+.video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  z-index: 2;
+}
+
+.video-player:hover .video-controls,
+.video-player:focus-within .video-controls,
+.video-player.controls-visible .video-controls {
+  opacity: 1;
+}
+
+/* Progress bar */
+.video-progress {
+  flex: 1;
+  height: 8px;
+  cursor: pointer;
+  position: relative;
+}
+
+.video-progress-bar {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  position: relative;
+}
+
+.video-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: var(--primary-color);
+  border-radius: var(--radius-pill);
+  width: 0;
+  transition: width 0.1s linear;
+}
+
+.video-progress-thumb {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.video-progress:hover .video-progress-thumb,
+.video-progress:focus-within .video-progress-thumb {
+  opacity: 1;
+}
+
+/* Control buttons */
+.video-play-button,
+.video-volume-button,
+.video-fullscreen-button {
+  width: 36px;
+  height: 36px;
+  background-color: transparent;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  outline: none;
+  font-size: 1rem;
+}
+
+.video-play-button:hover,
+.video-volume-button:hover,
+.video-fullscreen-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.video-play-button:focus-visible,
+.video-volume-button:focus-visible,
+.video-fullscreen-button:focus-visible {
+  box-shadow: 0 0 0 2px white;
+}
+
+/* Volume control */
+.video-volume {
+  display: flex;
+  align-items: center;
+  margin-right: var(--spacing-sm);
+}
+
+.video-volume-slider {
+  width: 60px;
+  height: 4px;
+  -webkit-appearance: none;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-pill);
+  outline: none;
+  transform: translateY(1px);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: none;
+}
+
+.video-volume:hover .video-volume-slider {
+  display: block;
+}
+
+.video-volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: white;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.video-volume-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: white;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-fast);
+}
+
+/* Time display */
+.video-time {
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  margin: 0 var(--spacing-sm);
+}
+
+/* Fullscreen modes */
+.video-player:fullscreen {
+  width: 100vw;
+  height: 100vh;
+}
+
+.video-player:fullscreen .video-element {
+  object-fit: contain;
+}
+
+/* Loading state */
+.video-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  border-top-color: var(--primary-color);
+  animation: video-spin 1s linear infinite;
+  z-index: 2;
+  display: none;
+}
+
+.video-player.loading .video-loading {
+  display: block;
+}
+
+@keyframes video-spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Video player variations */
+.video-player.horizontal {
+  aspect-ratio: 16/9;
+}
+
+.video-player.square {
+  aspect-ratio: 1/1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .video-controls {
+    padding: var(--spacing-sm);
+  }
+  
+  .video-play-button,
+  .video-volume-button,
+  .video-fullscreen-button {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+  
+  .video-time {
+    font-size: 0.75rem;
+    margin: 0 var(--spacing-xs);
+  }
+  
+  .video-volume-slider {
+    width: 40px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .video-player {
+    transition: none;
+  }
+  
+  .video-controls,
+  .video-progress-fill,
+  .video-progress-thumb {
+    transition: none;
+  }
+} 

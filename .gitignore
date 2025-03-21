@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment variables
+.env
+
+# Google Cloud credentials
+*.json
+!package.json
+!client_secret.template.json
+!service-account-key.template.json
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Generated files
+/static/generated/
+/uploads/
+
+# Celery beat schedule file
+celerybeat-schedule
+
+# Docker
+.dockerignore
+
+# Sample files
+sample_music/ 

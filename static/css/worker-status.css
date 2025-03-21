@@ -1,0 +1,444 @@
+/**
+ * Worker Status UI Styles
+ */
+
+/* Container */
+.worker-status-panel {
+    background-color: var(--card-bg, #fff);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    margin-bottom: 20px;
+    max-width: 100%;
+}
+
+/* Status Header */
+.status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color, #e7e9ed);
+}
+
+.status-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.connection-status {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+    background-color: #ccc;
+}
+
+.status-dot.connected {
+    background-color: #4caf50;
+}
+
+.status-dot.disconnected {
+    background-color: #f44336;
+}
+
+/* Worker List */
+.worker-list {
+    margin-bottom: 20px;
+}
+
+.no-workers-message {
+    text-align: center;
+    color: var(--text-light, #777);
+    padding: 20px;
+    font-style: italic;
+}
+
+.worker-item {
+    border: 1px solid var(--border-color, #e7e9ed);
+    border-radius: 6px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.worker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background-color: var(--card-header-bg, #f5f7fa);
+    border-bottom: 1px solid var(--border-color, #e7e9ed);
+}
+
+.worker-name {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.worker-status {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.worker-status.online {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4caf50;
+}
+
+.worker-status.offline {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+}
+
+.worker-details {
+    padding: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.worker-stats {
+    flex: 1;
+    min-width: 200px;
+}
+
+.stat-item {
+    margin-bottom: 8px;
+    display: flex;
+    font-size: 13px;
+}
+
+.stat-label {
+    color: var(--text-light, #777);
+    margin-right: 8px;
+    min-width: 90px;
+}
+
+.worker-task-breakdown {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.breakdown-item {
+    text-align: center;
+    min-width: 70px;
+    padding: 10px;
+    background-color: var(--card-alt-bg, #f5f7fa);
+    border-radius: 6px;
+}
+
+.breakdown-label {
+    font-size: 12px;
+    color: var(--text-light, #777);
+    margin-bottom: 5px;
+}
+
+.breakdown-value {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Task Summary */
+.task-summary {
+    display: flex;
+    margin-bottom: 20px;
+    background-color: var(--card-alt-bg, #f5f7fa);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.summary-item {
+    flex: 1;
+    text-align: center;
+    padding: 15px;
+    border-right: 1px solid var(--border-color, #e7e9ed);
+}
+
+.summary-item:last-child {
+    border-right: none;
+}
+
+.summary-label {
+    font-size: 12px;
+    color: var(--text-light, #777);
+    margin-bottom: 5px;
+}
+
+.summary-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--primary-color, #007bff);
+}
+
+/* Task Details */
+.task-details {
+    margin-top: 30px;
+}
+
+.task-details h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.task-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color, #e7e9ed);
+    margin-bottom: 20px;
+}
+
+.task-tab {
+    padding: 10px 15px;
+    font-size: 14px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    color: var(--text-light, #777);
+    transition: all 0.2s ease;
+}
+
+.task-tab:hover {
+    color: var(--primary-color, #007bff);
+}
+
+.task-tab.active {
+    color: var(--primary-color, #007bff);
+    border-bottom-color: var(--primary-color, #007bff);
+    font-weight: 500;
+}
+
+.task-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.no-tasks-message {
+    text-align: center;
+    color: var(--text-light, #777);
+    padding: 20px;
+    font-style: italic;
+}
+
+.task-item {
+    border: 1px solid var(--border-color, #e7e9ed);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.task-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-color: var(--primary-color-light, #b3d7ff);
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: var(--card-header-bg, #f5f7fa);
+    border-bottom: 1px solid var(--border-color, #e7e9ed);
+}
+
+.task-name {
+    font-weight: 500;
+    font-size: 13px;
+    width: 70%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-status {
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.task-status.active {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4caf50;
+}
+
+.task-status.scheduled {
+    background-color: rgba(255, 152, 0, 0.1);
+    color: #ff9800;
+}
+
+.task-status.reserved {
+    background-color: rgba(3, 169, 244, 0.1);
+    color: #03a9f4;
+}
+
+.task-status.success {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4caf50;
+}
+
+.task-status.failure {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+}
+
+.task-status.pending {
+    background-color: rgba(189, 189, 189, 0.1);
+    color: #9e9e9e;
+}
+
+.task-details {
+    padding: 10px 15px;
+    font-size: 12px;
+}
+
+.task-id {
+    color: var(--text-light, #777);
+    margin-bottom: 5px;
+    font-family: monospace;
+}
+
+.task-args {
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-worker {
+    font-style: italic;
+    color: var(--text-light, #777);
+}
+
+/* Task Detail Modal */
+.task-detail-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    overflow-y: auto;
+}
+
+.task-detail-content {
+    background-color: var(--card-bg, #fff);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 25px;
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-light, #777);
+}
+
+.close-button:hover {
+    color: var(--text-color, #333);
+}
+
+.task-detail-content h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color, #e7e9ed);
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 10px 15px;
+}
+
+.detail-label {
+    font-weight: 500;
+    color: var(--text-light, #777);
+}
+
+.detail-value {
+    word-break: break-word;
+}
+
+.detail-value.error {
+    color: #f44336;
+}
+
+.detail-value.traceback {
+    font-family: monospace;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.status-success {
+    color: #4caf50;
+    font-weight: 500;
+}
+
+.status-failure {
+    color: #f44336;
+    font-weight: 500;
+}
+
+.status-pending {
+    color: #9e9e9e;
+    font-weight: 500;
+}
+
+.status-started {
+    color: #ff9800;
+    font-weight: 500;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767px) {
+    .worker-details {
+        flex-direction: column;
+    }
+    
+    .summary-item {
+        padding: 10px;
+    }
+    
+    .summary-value {
+        font-size: 20px;
+    }
+    
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+} 

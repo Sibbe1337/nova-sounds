@@ -1,0 +1,51 @@
+/* 
+ * Main CSS Entry Point
+ * Import all component styles in proper order
+ */
+
+/* Core variables and utilities */
+@import 'variables.css';
+@import 'color-enhancement.css';
+@import 'grid-system.css';
+@import 'a11y.css'; /* Accessibility enhancements */
+@import 'responsive-utils.css'; /* Responsive layout utilities */
+
+/* Base UI components */
+@import 'buttons.css';
+@import 'progress-indicators.css';
+@import 'interactive-cards.css';
+@import 'ui-feedback.css';
+@import 'notifications.css';
+@import 'ui-states.css';
+@import 'theme-customizer.css';
+
+/* Feature-specific styles */
+@import 'video-player.css';
+@import 'music_browser.css';
+@import 'style_presets.css';
+@import 'progress_tracker.css';
+@import 'metadata_generator.css';
+@import 'scheduler.css';
+@import 'auto-mode.css';
+
+/* Page layouts */
+@import 'landing.css';
+@import 'auth.css';
+@import 'chat-interface.css';
+@import 'onboarding.css';
+
+/* Special effects */
+@import 'background-effects.css';
+
+/* Debug tools - now enabled for troubleshooting */
+@import 'debug-toolbar.css';
+
+/* 
+ * Media query breakpoints
+ * These are defined in responsive-utils.css, but adding a reference here:
+ * - xs: 576px and below (mobile)
+ * - sm: 577px to 768px (large mobile/small tablet)
+ * - md: 769px to 992px (tablet)
+ * - lg: 993px to 1200px (desktop)
+ * - xl: 1201px and above (large desktop)
+ */ 
