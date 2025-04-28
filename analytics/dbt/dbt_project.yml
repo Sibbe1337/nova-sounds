@@ -1,0 +1,38 @@
+# dbt_project.yml
+name: 'nip_analytics'
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which dbt profile to use.
+profile: 'nip_analytics' # Matches the profile name in ~/.dbt/profiles.yml
+
+# These configurations specify where dbt should look for different types of files.
+# Path is relative to the dbt project directory (analytics/dbt)
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+# In this example config, we tell dbt to build all models in the example/
+# directory as views. These settings can be overridden in the model files
+# themselves using the `{{ config(...) }}` macro.
+models:
+  nip_analytics:
+    # Config indicated by + and applies to all files under models/staging/
+    staging:
+      +materialized: view
+      +schema: staging # Example: Use a 'staging' schema in BigQuery
+    # Config indicated by + and applies to all files under models/marts/
+    marts:
+      +materialized: table
+      +schema: marts # Example: Use a 'marts' schema in BigQuery

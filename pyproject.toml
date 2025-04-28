@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "nip-monorepo"
+version = "0.1.0"
+description = "Nova Insights Platform Monorepo"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+# Add root-level shared dependencies here if needed
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.2.0"
+dbt-core = "^1.9.4"
+dbt-bigquery = "^1.9.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

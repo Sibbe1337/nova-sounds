@@ -1,0 +1,39 @@
+{
+	"name": "NIP Monorepo Dev Container",
+	"image": "mcr.microsoft.com/devcontainers/python:3.11",
+
+	"features": {
+		// Add features like Docker-in-Docker if needed
+	},
+
+	"postCreateCommand": "pip install poetry && poetry install", // Installs poetry and dependencies
+
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"python.defaultInterpreterPath": "/usr/local/bin/python",
+				"python.linting.enabled": true,
+				"python.linting.pylintEnabled": false, // Using ruff
+				"python.formatting.provider": "black",
+				"editor.formatOnSave": true,
+				"[python]": {
+					"editor.defaultFormatter": "ms-python.black-formatter"
+				},
+				"[sql]": {
+					"editor.defaultFormatter": "sqlfluff.sqlfluff"
+				}
+			},
+			"extensions": [
+				"ms-python.python",
+				"ms-python.black-formatter",
+				"charliermarsh.ruff",
+				"sqlfluff.sqlfluff",
+				"ms-azuretools.vscode-docker" // If using Docker features
+			]
+		}
+	},
+
+	// "forwardPorts": [],
+	// "runArgs": ["--env-file",".env"],
+	// "mounts": []
+}

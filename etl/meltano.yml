@@ -1,0 +1,23 @@
+version: 1
+default_environment: dev
+project_id: "nip-etl" # Or generate UUID: cli --command "meltano project id"
+
+environments:
+  - name: dev
+
+plugins:
+  # Extractors will be defined here later
+  # extractors:
+  #  - name: ...
+
+  loaders:
+    - name: target-jsonl
+      variant: andyh1203
+      pip_url: target-jsonl
+
+# Schedules can be defined here later
+# schedules:
+#   - name: spotify-nightly
+#     interval: '@daily'
+#     extractor: tap-spotify-artists
+#     loader: target-jsonl # Change to target-bigquery later

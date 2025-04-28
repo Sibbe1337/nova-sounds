@@ -1,139 +1,363 @@
-Here’s your updated PRD with all the additional features added.
+Technical Product Requirements Document (TPRD)
 
-⸻
+Product: Nova Insights Platform (NIP)Audience: Engineering, Data Platform, DevOps, ML, QAVersion: 0.1 (Draft)Date: 28 Apr 2025Tooling Focus: Built and maintained primarily via Cursor (AI‑native IDE) for code creation, review and pair‑programming.
 
-Product Requirements Document (PRD)
+1. Purpose
 
-YouTube Shorts Machine
+Provide an end‑to‑end, engineering‑level specification for delivering the Nova Insights Platform described in the functional PRD. This document guides implementation inside Cursor—every requirement is traceable to a repository path, test, or CI pipeline job.
 
-1. Overview
+2. High‑Level Architecture
 
-The YouTube Shorts Machine is an AI-powered automation tool that generates and uploads YouTube Shorts using music stored in Google Cloud Storage.
+                    ┌─────────────────────────┐
+                    │     Metabase (BI)       │
+                    └────────────┬────────────┘
+                                 │
+                        (JDBC/SQL Queries)
+                                 │
+┌───────────────┐      ┌─────────▼─────────┐       ┌─────────────────┐
+│  Singer Taps  │────► │  BigQuery (DW)   │ ─────► │  Cloud Functions│
+│  (Spotify,    │      │  Raw + DataMart  │       │  PitchScore API │
+│   Apple …)    │      └─────────┬─────────┘       └─────────────────┘
+└───────────────┘                │
+          ▲                      │ (dbt)
+          │            ┌─────────▼─────────┐
+          │            │   GCS Staging     │
+          │            └───────────────────┘
+          │                    │
+          │           (Meltano Orchestration)
+          │
+┌─────────┴─────────┐
+│  Terraform IaC    │
+└───────────────────┘
 
-The product focuses on:
-✅ AI-powered video creation (Auto-generate Shorts with music sync)
-✅ Google Cloud Storage integration (Fetch Nova Sounds music)
-✅ YouTube API upload (Direct posting from storage)
-✅ Advanced AI editing & effects (Smart transitions, styles, and templates)
-✅ Multi-platform video export (TikTok, Instagram Reels, Facebook Reels)
-✅ Bulk processing & scheduling (Mass Shorts creation and automated posting)
-✅ AI trend detection & optimization (Analyze trending content & suggest improvements)
+3. Repositories & Branch Strategy
 
-⸻
+Repo
 
-2. Goals & Objectives
+Purpose
 
-🎯 Automate YouTube Shorts creation for content creators, marketers, and casual users
-🎯 Provide seamless Google Cloud Storage integration for music selection
-🎯 Ensure AI-enhanced beat synchronization for engaging Shorts
-🎯 Offer multi-platform content distribution beyond YouTube
-🎯 Create AI-driven content strategies to improve engagement
+Default Branch
 
-⸻
+Branching Model
 
-3. Target Audience
+nip‑etl
 
-📢 Content Creators & Influencers – Quick Shorts for engagement
-📢 Marketers & Brands – Promote content via AI-generated Shorts
-📢 Casual Users – Create fun Shorts with minimal effort
-📢 Social Media Managers – Automate content across multiple platforms
+Singer taps, Meltano project, Dockerfiles
 
-⸻
+main
 
-4. Key Features
+Trunk‑based; feature branches auto‑merge via Cursor‑generated PR descriptions
 
-4.1. AI-Powered Shorts Creation
+nip‑analytics
 
-✅ Auto Beat Sync – AI matches visuals to music
-✅ Smart Transitions & Effects – AI selects best cuts
-✅ AI Video Styles & Templates – Pre-set themes (Vlog, Hype, Chill, Promo, Meme)
-✅ Dynamic Text Overlays & Animations – AI picks fonts & styles based on video mood
+dbt project (models + tests + docs)
 
-4.2. Google Cloud Storage Integration
+main
 
-✅ Fetch music tracks from Google Cloud Buckets
-✅ Generate signed URLs for secure access
-✅ Metadata handling (track name, duration, license status)
-✅ Trending Sound Detection – AI identifies popular tracks from Google Cloud
+Same
 
-4.3. AI Video Processing (Python)
+nip‑infra
 
-✅ Uses FFMPEG + OpenCV for beat syncing
-✅ Auto captioning via Whisper/OpenAI API (multi-language support)
-✅ Auto Sound Effects – AI adds whooshes, risers, and bass drops based on video energy
-✅ Saves final videos in Google Cloud Storage
+Terraform modules & env configs
 
-4.4. YouTube & Multi-Platform Uploads
+main
 
-✅ Direct OAuth 2.0 authentication for YouTube uploads
-✅ Uploads Shorts automatically from Google Cloud Storage
-✅ Handles metadata (title, tags, description)
-✅ Cross-platform distribution – Upload to TikTok, Instagram Reels, Facebook Reels
-✅ Auto-resizing & format adjustments for different social media platforms
+GitOps; PR environments via Terraform Cloud
 
-4.5. Bulk Processing & Scheduling
+nip‑services
 
-✅ Batch Upload & Processing – Users can queue multiple Shorts
-✅ Auto-Scheduling – Upload at optimal engagement times
-✅ Content Calendar – Plan & organize Shorts for the month
+Cloud Functions (Pitch Score, alerts)
 
-4.6. AI Trend Detection & Optimization
+main
 
-✅ Trending Shorts Format Suggestions – AI suggests viral styles
-✅ AI Thumbnail & Title Generator – Boost click-through rate (CTR)
-✅ Performance Tracking – Analyze views, retention, & engagement
-✅ A/B Testing – Compare different video versions to see which performs better
+Same
 
-4.7. Monetization & Revenue Features
+All repos instrumented with Cursor’s “Continuous Feedback” to auto‑suggest code improvements and inline docstrings.
 
-✅ Freemium & Pro Subscription Plans
-✅ Affiliate Earnings – Allow creators to earn from AI-generated promo Shorts
-✅ Sponsored AI Shorts – Brands pay for custom Shorts ads
-✅ Music Licensing Revenue – Paid access to premium Nova Sounds tracks
+4. Detailed Requirements
 
-4.8. User Dashboard & Analytics
+4.1 Data Ingestion
 
-✅ User Authentication (Google Login, Firebase Auth)
-✅ History of generated Shorts & performance tracking
-✅ Data-driven recommendations to improve video engagement
+ID
 
-4.9. API & White-Label Offering
+Requirement
 
-✅ API Access for Agencies & SaaS Tools – Bulk Shorts automation
-✅ White-Label Solution – Sell AI-powered Shorts generation as a SaaS tool
-✅ Enterprise Plan – Custom AI editing & analytics for large brands
+Spec
 
-⸻
+Acceptance Tests
 
-5. Tech Stack & Integrations
+ING‑01
 
-🔹 Backend (Python) – Flask/FastAPI
-🔹 AI Processing – OpenCV, FFMPEG, RunwayML (if needed)
-🔹 Google Cloud Storage API – Fetch & manage music tracks
-🔹 YouTube API – Automated upload & scheduling
-🔹 TikTok/Instagram Reels API – Multi-platform upload
-🔹 Firebase Auth – User authentication
-🔹 Celery + Redis – Asynchronous processing for batch jobs
-🔹 PostgreSQL / Firestore – Store video metadata, history, and analytics
+Nightly pull of Spotify analytics flat‑files
 
-⸻
+Singer tap‑spotify‑artists (custom fork) running in Docker on Cloud Run Jobs
 
-6. Success Metrics
+File presence confirmed; row‑count ≠ 0; schema hash matches contract
 
-📊 User adoption – Number of Shorts generated
-📊 Engagement rate – Average watch time per Short
-📊 Music usage – % of Shorts using Nova Sounds music
-📊 Cross-platform reach – Number of videos shared beyond YouTube
-📊 Revenue growth – Subscription, licensing, and affiliate earnings
+ING‑02
 
-⸻
+Multi‑DSP schema unification
 
-Next Steps
+Meltano Mapper transforms -> Parquet files in GCS staging/raw_{{source}}/dt={{ds}}
 
-✅ Update product roadmap based on these new features
-✅ Prioritize key upgrades for next development cycle
-✅ Set up multi-platform API integrations (TikTok, Instagram, etc.)
+Unit tests in pytest verifying column names & types
 
-⸻
+ING‑03
 
-🚀 Does this updated PRD match your vision? Let me know if you need refinements! 🔥🔥
+Incremental loads
+
+state.json per tap; supports bookmarks
+
+Simulated re‑runs load <1 % duplicate rows
+
+4.2 Data Warehouse & Modeling
+
+ID
+
+Requirement
+
+Spec
+
+Acceptance Tests
+
+DW‑01
+
+Raw tables
+
+Same‑as‑source, partitioned by ingestion_ts
+
+BigQuery table exists and partition pruning verified
+
+DW‑02
+
+DataMart streams_fact
+
+Grain: (isrc, dsp, date)
+
+dbt test: unique+not_null PK
+
+DW‑03
+
+Data freshness SLA
+
+< 4 h after DSP file availability
+
+dbt source_freshness.yml alerts on breach
+
+DW‑04
+
+Pitch Score feature table
+
+Latest 30 d artist, playlist & audio features
+
+ML dataset snapshot passes row‑count + null checks
+
+4.3 Machine Learning Service
+
+ID
+
+Requirement
+
+Spec
+
+ML‑01
+
+Model
+
+XGBoost binary classifier predicting playlist_add probability (0–1)
+
+ML‑02
+
+Training cadence
+
+Weekly Cloud Build job → Vertex AI Training
+
+ML‑03
+
+Serving
+
+Cloud Functions REST endpoint ≤ 250 ms p95
+
+ML‑04
+
+Monitoring
+
+Vertex AI Model Monitoring + custom BigQuery logging
+
+4.4 API & Integration
+
+Endpoint
+
+Method
+
+Auth
+
+Payload
+
+Notes
+
+/v1/pitch-score
+
+POST
+
+Service Account + JWT
+
+{ "isrc": "SE7DX2406949" }
+
+Returns { "score": 0.88 }
+
+/v1/alerts/threshold
+
+POST
+
+Same
+
+{ "metric":"streams", "value":100000 }
+
+Creates alert rule
+
+4.5 Dashboarding & Access
+
+Metabase deployed on GKE Autopilot.
+
+SSO via Google Identity; row‑level security through BigQuery authorized views.
+
+4.6 CI/CD
+
+Stage
+
+Tool
+
+Trigger
+
+Lint & Unit Tests
+
+pre‑commit, pytest
+
+Push to PR branch
+
+Build & Push Image
+
+Cloud Build
+
+Merge to main
+
+Terraform Plan & Apply
+
+Terraform Cloud
+
+Merge to main (autopruned)
+
+dbt Run + CI tests
+
+Cloud Build
+
+Merge to main
+
+Cursor AI comments automatically summarise PR diffs and suggest reviewers.
+
+5. Non‑Functional Targets
+
+Attribute
+
+Target
+
+Latency (API)
+
+≤ 250 ms p95
+
+Throughput
+
+50 K requests/day
+
+Data volume
+
+Up to 5 TB/year
+
+Uptime
+
+99.5 % monthly
+
+Recovery Time Objective (RTO)
+
+2 h
+
+6. Monitoring & Alerting
+
+Component
+
+Metrics
+
+Alerts
+
+ETL Jobs
+
+Success/Failure, duration
+
+PagerDuty if job fails twice
+
+BigQuery
+
+Slot utilisation, query latency
+
+Slack warning at ≥80 % slots
+
+ML API
+
+p95 latency, error‑rate
+
+PagerDuty at >1 % 5xx
+
+7. Dev‑Env & Tooling Standard (Cursor‑centric)
+
+Cursor IDE is the canonical environment. All repo setup tasks include a .cursor.yml to enforce formatting, tests, and code‑context windows.
+
+Python 3.11 with Poetry for dependency management.
+
+SQLFluff for dbt SQL linting, auto‑fixed on save via Cursor actions.
+
+Pre‑commit hooks run Black, isort, ruff.
+
+8. Migration & Cut‑over Plan
+
+Step
+
+Action
+
+Owner
+
+1
+
+Backfill 18 months of DSP data to BigQuery
+
+Data Eng
+
+2
+
+Dry‑run dashboards vs. current spreadsheets
+
+Analytics
+
+3
+
+Parallel‑run for 2 cycles; sign‑off accuracy (±0.5 %)
+
+Finance
+
+4
+
+Swap Metabase URL; archive legacy sheets
+
+PM
+
+9. Open Technical Questions
+
+Use Cloud Composer vs. Meltano Scheduled Cloud Run for orchestration?
+
+Do we need multi‑region BigQuery for DR, or is daily export to GCS sufficient?
+
+Should Pitch Score training be Vertex AI or in‑warehouse BigQuery ML?
+
+Which feature store (if any) do we adopt? (Feast vs. bespoke BigQuery table).
+
+End of Technical PRD

@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "nip-etl"
+version = "0.1.0"
+description = "NIP ETL Components"
+authors = ["Your Name <you@example.com>"]
+packages = [{ include = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.14"
+typer = {extras = ["all"], version = ">=0.12.0"}
+# Add other ETL dependencies: requests, google-cloud-storage, etc.
+
+[tool.poetry.group.dev.dependencies]
+meltano = "^3.7.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

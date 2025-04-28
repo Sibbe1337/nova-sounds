@@ -1,6 +1,9 @@
 ---
-description: 
-globs: 
-alwaysApply: true
+description:
+globs:
+alwaysApply: false
 ---
- 
+description: "Requires every function to have the comment '# this is function defined by learner'"
+alwaysApply: false
+
+Every function should have the comment "# this is function defined by learner"

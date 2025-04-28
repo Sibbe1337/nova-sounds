@@ -1,0 +1,4 @@
+# Function dependencies
+functions-framework>=3.0.0
+google-cloud-bigquery # For BQ ML interaction
+# Add other dependencies like pandas, scikit-learn if needed for feature processing

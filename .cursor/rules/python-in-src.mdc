@@ -1,0 +1,25 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+@rule
+description: Ensure all Python files reside within the `src` directory.
+globs:
+  - "**/*.py"
+alwaysApply: true
+
+All Python files (`*.py`) should be located inside the `src` folder at the root of the project.
+
+Example:
+
+**Good:**
+```
+src/
+└── main.py
+```
+
+**Bad:**
+```
+main.py
+```

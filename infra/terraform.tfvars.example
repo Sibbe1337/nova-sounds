@@ -1,0 +1,7 @@
+# Example variable assignments (Do not commit actual values here)
+# Values should typically be set in Terraform Cloud workspace variables.
+
+# gcp_project_id = "your-gcp-project-id"
+# gcp_region     = "your-preferred-region"
+
+# Add other required variable examples here as needed.

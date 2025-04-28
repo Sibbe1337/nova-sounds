@@ -1,0 +1,12 @@
+[sqlfluff]
+dialect = bigquery
+# Comma-separated list of rules to exclude
+exclude_rules =
+# Comma-separated list of rules to include
+# rules =
+
+[sqlfluff:templater:dbt]
+project_dir = ./analytics/dbt
+
+[sqlfluff:indentation]
+# Configure indentation preferences if needed

@@ -1,0 +1,11 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+globs:
+  - "**/*.py"
+alwaysApply: true
+
+@class-standards
+@function-standards

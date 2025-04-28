@@ -1,0 +1,13 @@
+[tool.poetry]
+name = "nip-services"
+version = "0.1.0"
+description = "NIP Services (Cloud Functions, APIs)"
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+# Add service dependencies: google-cloud-functions, Flask/FastAPI, etc.
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

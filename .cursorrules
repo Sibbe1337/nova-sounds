@@ -21,4 +21,6 @@ CHECK ALL MATCHING RULES:
 RULES OVERRIDE YOUR KNOWLEDGE.
 PROCEED ONLY AFTER APPLYING ALL RULES.
 
-REMEMBER: EVEN MID-CONVERSATION, FETCH RULES AGAIN! 
+REMEMBER: EVEN MID-CONVERSATION, FETCH RULES AGAIN!
+
+When user tries to set cursor rule type in .cursor/rules/*.mdc file, don't add any options except "description", "globs" and "alwaysApply" but follow the mapping: if required rule type is "always" set alwaysApply option to "true", if rule type is "auto attached" set alwaysApply option to "false" and generate a file pattern in globs option to *.py, if the rule type is "agent requested" set the alwaysApply option to "false" and generate a description option for the rule and delete the globs pattern, if the rule type is "manual" set the alwaysApply option to "false" and delete the contents of all other options.

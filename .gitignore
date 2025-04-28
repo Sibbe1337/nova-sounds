@@ -3,61 +3,37 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.so
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Virtual Environment
-venv/
-ENV/
-env/
-
-# IDE files
-.idea/
-.vscode/
-*.swp
-*.swo
 
 # Environment variables
 .env
+*.env
+.env.*
+!.env.example
 
-# Google Cloud credentials
-*.json
-!package.json
-!client_secret.template.json
-!service-account-key.template.json
+# Specific project environment file
+etl/.env
 
-# Logs
-*.log
-logs/
-
-# Temporary files
-*.tmp
+# IDE / OS specific
+.vscode/
+.idea/
+*.swp
+*.swo
 .DS_Store
-Thumbs.db
 
-# Generated files
-/static/generated/
-/uploads/
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
 
-# Celery beat schedule file
-celerybeat-schedule
+# Poetry
+poetry.lock # Often committed, but can be ignored in some monorepo strategies if needed
 
-# Docker
-.dockerignore
-
-# Sample files
-sample_music/ 
+# Meltano
+.meltano/
+output/

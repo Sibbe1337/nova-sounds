@@ -1,6 +1,9 @@
 ---
-description: 
-globs: 
-alwaysApply: true
+description:
+globs:
+alwaysApply: false
 ---
- 
+description: "Requires every class to have the comment '# this is class defined by learner'"
+alwaysApply: false
+
+Every class should have the comment "# this is class defined by learner"
