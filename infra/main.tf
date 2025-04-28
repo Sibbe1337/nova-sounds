@@ -241,6 +241,22 @@ resource "google_cloudfunctions2_function" "alert_threshold_api" {
   }
 }
 
+# ---- Vertex AI ----
+
+# Note: More specific Vertex AI resources (training jobs, endpoints, monitoring)
+# will likely be added as the ML pipeline is developed.
+
+resource "google_vertex_ai_dataset" "ml_dataset" {
+  display_name = "NIP Pitch Score Features Dataset"
+  metadata_schema_uri = "gs://google-cloud-aiplatform/schema/dataset/metadata/tabular_1.0.0.yaml" # Schema for tabular data
+  region       = var.gcp_region
+  project      = var.gcp_project_id
+
+  # encryption_spec {
+  #   kms_key_name = "your-kms-key-name" # Optional: Add CMEK if needed
+  # }
+}
+
 # ---- Outputs ----
 
 output "gcp_project_id" {
@@ -286,4 +302,9 @@ output "pitch_score_api_uri" {
 output "alert_threshold_api_uri" {
   description = "URI of the Alert Threshold API Cloud Function."
   value       = google_cloudfunctions2_function.alert_threshold_api.service_config[0].uri
+}
+
+output "vertex_ai_dataset_name" {
+  description = "Name of the Vertex AI Dataset for ML features."
+  value       = google_vertex_ai_dataset.ml_dataset.name
 }
