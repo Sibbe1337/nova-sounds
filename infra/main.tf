@@ -34,6 +34,7 @@ provider "google" {
 locals {
   # List of required APIs for the project
   required_gcp_apis = [
+    "cloudresourcemanager.googleapis.com", # Needed to enable other APIs
     "storage.googleapis.com",        # Cloud Storage
     "bigquery.googleapis.com",       # BigQuery
     "run.googleapis.com",          # Cloud Run
