@@ -258,6 +258,29 @@ resource "google_vertex_ai_dataset" "ml_dataset" {
   # }
 }
 
+# ---- GKE Cluster (Metabase) ----
+
+resource "google_container_cluster" "metabase_cluster" {
+  name     = "nip-metabase-cluster"
+  location = var.gcp_region
+  project  = var.gcp_project_id
+
+  # Enable Autopilot
+  enable_autopilot = true
+
+  # Autopilot clusters manage their own node pools, networking (usually VPC-native),
+  # and other configurations automatically.
+  # We remove explicit node_pool, networking_mode, etc., configurations.
+
+  # Minimal required configuration for Autopilot:
+  initial_node_count = 1 # Required for Terraform provider, but Autopilot manages scaling.
+
+  # Optional: Configure release channel, maintenance windows, etc.
+  # release_channel {
+  #   channel = "REGULAR"
+  # }
+}
+
 # ---- Outputs ----
 
 output "gcp_project_id" {
@@ -308,4 +331,15 @@ output "alert_threshold_api_uri" {
 output "vertex_ai_dataset_name" {
   description = "Name of the Vertex AI Dataset for ML features."
   value       = google_vertex_ai_dataset.ml_dataset.name
+}
+
+output "metabase_gke_cluster_name" {
+  description = "Name of the GKE Autopilot cluster for Metabase."
+  value       = google_container_cluster.metabase_cluster.name
+}
+
+output "metabase_gke_cluster_endpoint" {
+  description = "Endpoint IP for the GKE Autopilot cluster."
+  value       = google_container_cluster.metabase_cluster.endpoint
+  sensitive   = true # Endpoint might be considered sensitive
 }
