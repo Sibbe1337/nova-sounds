@@ -23,6 +23,7 @@ provider "google" {
   project = var.gcp_project_id
   region  = var.gcp_region
   # Credentials configured via Terraform Cloud workspace variables or gcloud auth
+  credentials = var.gcp_credentials_json
 }
 
 # Add initial resource definitions here later
