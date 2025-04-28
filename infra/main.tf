@@ -146,6 +146,43 @@ resource "google_project_iam_member" "api_sa_functions_invoker" {
   member  = google_service_account.api_sa.member
 }
 
+# ---- Cloud Run Job (ETL) ----
+
+resource "google_cloud_run_v2_job" "etl_job" {
+  name     = "nip-etl-job" # Name for the Cloud Run Job resource itself
+  location = var.gcp_region
+  project  = var.gcp_project_id
+
+  template {
+    template {
+      service_account = google_service_account.etl_sa.email
+
+      containers {
+        # Define the container that runs the ETL process
+        image = "${var.gcp_region}-docker.pkg.dev/${var.gcp_project_id}/${google_artifact_registry_repository.docker_repo.repository_id}/nip-etl-runner:latest"
+        name  = "etl-container"
+
+        # Optional: Add command, args, env vars, resources (CPU/memory) as needed
+        # command = ["python", "run_meltano.py"]
+        # args    = ["--schedule", "spotify_schedule"]
+        # env {
+        #   name  = "TARGET_GCS_BUCKET"
+        #   value = google_storage_bucket.staging_bucket.name
+        # }
+        # resources {
+        #   limits = {
+        #     cpu    = "1000m"
+        #     memory = "512Mi"
+        #   }
+        # }
+      }
+
+      # Optional: Configure job execution settings (timeout, retries)
+      # max_retries = 3
+    }
+  }
+}
+
 # ---- Outputs ----
 
 output "gcp_project_id" {
@@ -176,4 +213,9 @@ output "api_service_account_email" {
 output "docker_repository_name" {
   description = "Name of the Artifact Registry Docker repository."
   value       = google_artifact_registry_repository.docker_repo.name
+}
+
+output "cloud_run_etl_job_name" {
+  description = "Name of the Cloud Run job for ETL."
+  value       = google_cloud_run_v2_job.etl_job.name
 }
