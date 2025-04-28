@@ -152,6 +152,7 @@ resource "google_cloud_run_v2_job" "etl_job" {
   name     = "nip-etl-job" # Name for the Cloud Run Job resource itself
   location = var.gcp_region
   project  = var.gcp_project_id
+  deletion_protection = false # Temporarily disable to allow replacement if tainted
 
   template {
     template {
