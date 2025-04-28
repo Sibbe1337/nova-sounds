@@ -43,6 +43,7 @@ locals {
     "iam.googleapis.com",          # IAM
     "artifactregistry.googleapis.com", # Artifact Registry (for Docker images)
     "aiplatform.googleapis.com",     # Vertex AI
+    "container.googleapis.com",      # Kubernetes Engine (for GKE)
     # Add other APIs as needed, e.g., pubsub.googleapis.com if using Pub/Sub
   ]
 }
