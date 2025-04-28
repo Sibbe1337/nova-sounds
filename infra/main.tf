@@ -116,6 +116,36 @@ resource "google_artifact_registry_repository" "docker_repo" {
   project       = var.gcp_project_id
 }
 
+# ---- IAM Bindings ----
+
+# ETL Service Account Permissions
+resource "google_storage_bucket_iam_member" "etl_sa_gcs_writer" {
+  bucket = google_storage_bucket.staging_bucket.name
+  role   = "roles/storage.objectAdmin" # Allows creating/deleting objects
+  member = google_service_account.etl_sa.member
+}
+
+resource "google_bigquery_dataset_iam_member" "etl_sa_bq_editor" {
+  dataset_id = google_bigquery_dataset.nip_dw.dataset_id
+  project    = var.gcp_project_id
+  role       = "roles/bigquery.dataEditor" # Allows creating tables, writing data
+  member     = google_service_account.etl_sa.member
+}
+
+# API Service Account Permissions
+resource "google_bigquery_dataset_iam_member" "api_sa_bq_viewer" {
+  dataset_id = google_bigquery_dataset.nip_dw.dataset_id
+  project    = var.gcp_project_id
+  role       = "roles/bigquery.dataViewer" # Allows reading data
+  member     = google_service_account.api_sa.member
+}
+
+resource "google_project_iam_member" "api_sa_functions_invoker" {
+  project = var.gcp_project_id
+  role    = "roles/cloudfunctions.invoker" # Allows invoking functions
+  member  = google_service_account.api_sa.member
+}
+
 # ---- Outputs ----
 
 output "gcp_project_id" {
