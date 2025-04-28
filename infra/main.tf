@@ -183,6 +183,64 @@ resource "google_cloud_run_v2_job" "etl_job" {
   }
 }
 
+# ---- Cloud Functions ----
+
+# Pitch Score API Function
+resource "google_cloudfunctions2_function" "pitch_score_api" {
+  name     = "nip-pitch-score-api"
+  location = var.gcp_region
+  project  = var.gcp_project_id
+
+  build_config {
+    runtime     = "python311" # Matches TPRD Dev Env Standard
+    entry_point = "handle_request" # Assumed entry point, adjust if needed
+    source {
+      storage_source {
+        bucket = google_storage_bucket.staging_bucket.name
+        object = "functions-source/pitch-score-api.zip" # Placeholder source code location
+      }
+    }
+  }
+
+  service_config {
+    max_instance_count = 3 # Example scaling
+    min_instance_count = 0
+    available_memory   = "256Mi"
+    timeout_seconds    = 60
+    service_account_email = google_service_account.api_sa.email
+    ingress_settings    = "ALLOW_ALL" # Or "ALLOW_INTERNAL_ONLY" if needed
+    all_traffic_on_latest_revision = true
+  }
+}
+
+# Alert Threshold API Function
+resource "google_cloudfunctions2_function" "alert_threshold_api" {
+  name     = "nip-alert-threshold-api"
+  location = var.gcp_region
+  project  = var.gcp_project_id
+
+  build_config {
+    runtime     = "python311"
+    entry_point = "handle_request" # Assumed entry point, adjust if needed
+    source {
+      storage_source {
+        bucket = google_storage_bucket.staging_bucket.name
+        object = "functions-source/alert-threshold-api.zip" # Placeholder source code location
+      }
+    }
+  }
+
+  service_config {
+    max_instance_count = 2 # Example scaling
+    min_instance_count = 0
+    available_memory   = "256Mi"
+    timeout_seconds    = 60
+    service_account_email = google_service_account.api_sa.email
+    ingress_settings    = "ALLOW_ALL"
+    all_traffic_on_latest_revision = true
+  }
+}
+
 # ---- Outputs ----
 
 output "gcp_project_id" {
@@ -218,4 +276,14 @@ output "docker_repository_name" {
 output "cloud_run_etl_job_name" {
   description = "Name of the Cloud Run job for ETL."
   value       = google_cloud_run_v2_job.etl_job.name
+}
+
+output "pitch_score_api_uri" {
+  description = "URI of the Pitch Score API Cloud Function."
+  value       = google_cloudfunctions2_function.pitch_score_api.service_config[0].uri
+}
+
+output "alert_threshold_api_uri" {
+  description = "URI of the Alert Threshold API Cloud Function."
+  value       = google_cloudfunctions2_function.alert_threshold_api.service_config[0].uri
 }
