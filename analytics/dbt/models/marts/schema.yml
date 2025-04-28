@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: streams_fact
+    description: "Aggregated streams fact table. Grain: (isrc, dsp, stream_date)"
+    columns:
+      - name: isrc
+        description: "The ISRC of the track."
+        tests:
+          - not_null # An individual component of the grain shouldn't be null
+      - name: dsp
+        description: "The Digital Service Provider."
+        tests:
+          - not_null
+      - name: stream_date
+        description: "The date of the streams."
+        tests:
+          - not_null
+      - name: total_streams
+        description: "The total number of streams for the grain."
+
+    # Test to ensure the combination of grain columns is unique (DW-02)
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - isrc
+            - dsp
+            - stream_date
