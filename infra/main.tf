@@ -89,6 +89,32 @@ resource "google_bigquery_dataset" "nip_dw" {
   delete_contents_on_destroy = false # Set to true for dev/test if needed
 }
 
+# ---- Service Accounts ----
+
+resource "google_service_account" "etl_sa" {
+  account_id   = "nip-etl-sa"
+  display_name = "NIP ETL Service Account"
+  description  = "Service account for Nova Insights Platform ETL Cloud Run jobs"
+  project      = var.gcp_project_id
+}
+
+resource "google_service_account" "api_sa" {
+  account_id   = "nip-api-sa"
+  display_name = "NIP API Service Account"
+  description  = "Service account for Nova Insights Platform Cloud Functions (Pitch Score, Alerts)"
+  project      = var.gcp_project_id
+}
+
+# ---- Artifact Registry ----
+
+resource "google_artifact_registry_repository" "docker_repo" {
+  location      = var.gcp_region
+  repository_id = "nip-docker-repo"
+  description   = "Docker repository for Nova Insights Platform images"
+  format        = "DOCKER"
+  project       = var.gcp_project_id
+}
+
 # ---- Outputs ----
 
 output "gcp_project_id" {
@@ -104,4 +130,19 @@ output "staging_bucket_name" {
 output "bigquery_dataset_id" {
   description = "ID of the main BigQuery dataset."
   value       = google_bigquery_dataset.nip_dw.dataset_id
+}
+
+output "etl_service_account_email" {
+  description = "Email address of the ETL service account."
+  value       = google_service_account.etl_sa.email
+}
+
+output "api_service_account_email" {
+  description = "Email address of the API service account."
+  value       = google_service_account.api_sa.email
+}
+
+output "docker_repository_name" {
+  description = "Name of the Artifact Registry Docker repository."
+  value       = google_artifact_registry_repository.docker_repo.name
 }
